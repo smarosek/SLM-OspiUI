@@ -1,0 +1,49 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">10dp</dimen>
+    
+    <!-- Separate circuits vertically & horizontally -->
+    <dimen name="circuit_vertical_margin">20dp</dimen>
+    <dimen name="circuit_last_vertical_margin">30dp</dimen>
+    <dimen name="circuit_horizontal_margin">40dp</dimen>
+     <dimen name="circuit_horizontal_left_top_margin">10dp</dimen>
+    <dimen name="circuit_horizontal_left_margin">50dp</dimen>
+    
+    <!-- Inter-circuit separating values -->
+    <dimen name="label_button_vertical_margin">5dp</dimen>
+	<dimen name="button_chron_horizontal_margin">10dp</dimen>
+	
+	<dimen name="button_chron_vertical_margin">2dp</dimen>
+	<dimen name="list_divider_height">2dp</dimen>
+	
+	<!-- Spacing for weather forecast rows -->
+	<dimen name="left_margin">5dp</dimen>
+	<dimen name="right_margin">15dp</dimen>
+	<dimen name="label_value_margin">12dp</dimen>
+	<dimen name="subcat_margin">15dp</dimen>
+	<dimen name="btwn_values_margin">20dp</dimen>
+	<dimen name="larger_left_margin">40dp</dimen>
+	
+	
+	
+	<!-- Trying sp here -->
+	<dimen name="app_font_size">14sp</dimen>
+	<dimen name="chron_font_size">12sp</dimen>
+	
+	<!-- Font sizes -->
+	<dimen name="tiny_label_text_sz">8sp</dimen>
+	<dimen name="small_label_text_sz">10sp</dimen>
+	<dimen name="label_text_sz">12sp</dimen>
+	
+	<dimen name="small_data_text_sz">12sp</dimen>
+	<dimen name="medium_data_text_sz">16sp</dimen>
+	<dimen name="large_data_text_sz">20sp</dimen>
+	<dimen name="xlarge_data_text_sz">24sp</dimen>
+	
+	<dimen name="medium1_data_text_sz">14sp</dimen>
+	
+	
+	
+</resources>

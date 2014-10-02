@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+    <color name="red">#FFFF0000</color>
+    <color name="green">#FF00FF00</color>
+    <color name="blue">#FF0000FF</color>
+    <color name="purple">#912CEE</color>
+    <color name="dragndrop_background">#e0103010</color>    
+    
+    <color name="lt_gray">#F2F3F4</color>
+    <color name="med_gray">#BDBDBD</color>
+    
+    <color name="lt_purple">#D58DFF</color>
+    <color name="dk_purple">#8C17E6</color>
+    
+    <color name="lt_blue">#7FBEE5</color>
+    <color name="teal">#7FE5D7</color>
+
+<!--    <color name="on_green">#0DBD07</color> -->
+    <color name="on_green">#099804</color>
+    
+    <color name="forest_green">#3C8530</color>
+    <color name="wine">#7A1A4A</color>
+
+    
+</resources>

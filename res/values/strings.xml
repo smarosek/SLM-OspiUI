@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">SLM-OspiUI</string>
+    <string name="action_settings">Settings</string>
+        <string name="str_circuit_info">Circuit Watering History</string>
+    <string name="str_manual">Manual</string>
+    <string name="str_manual_op">Manual Operation</string>
+    <string name="str_loading_data">Loading data. Please Wait.</string>
+    
+       
+    <!-- Weather Info for Activity -->
+    <string name="str_forecast_data">Getting forecast data. Please Wait.</string>
+    <string name="str_forecast">Weather Forecast for:  </string>
+    <string name="str_date">Date:</string>
+    <string name="str_high">High:</string>
+    <string name="str_low">Low:</string>
+    <string name="str_temperature">Temperature:</string>
+    <string name="str_precip">Prob of Precip:</string>
+    <string name="str_day">Day:</string>
+    <string name="str_night">Night:</string>
+    <string name="str_description">Description:</string>
+    
+    <string name="str_dashes2"> --- </string>
+    <string name="str_dashes"> --- </string>
+    <string name="str_comma"> ,  </string>
+    <string name="str_empty"> </string>
+    
+    
+    
+    <!--  Testing / Temp strings -->
+    <string name="str_get"> GET </string>
+    <string name="str_command"> /sn1 </string>
+    <string name="str_result"> Result </string>
+
+</resources>
