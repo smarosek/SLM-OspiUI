@@ -3,10 +3,26 @@
 
     <string name="app_name">SLM-OspiUI</string>
     <string name="action_settings">Settings</string>
-        <string name="str_circuit_info">Circuit Watering History</string>
+    
+    <!-- Titles -->
+   	<string name="str_circuit_info">Circuit Watering History</string>
+    <string name="str_manual_op">Manual Operation</string>    
+        
+    
+    <!-- Labels -->
     <string name="str_manual">Manual</string>
-    <string name="str_manual_op">Manual Operation</string>
+    <string name="str_time_expired">Time Expired</string>
+    <string name="str_time_rem">Time Remaining</string>
+    <string name="str_timed">Timed</string>
+    
+    
+    
+    
+     <!-- Dialog Box Text -->
     <string name="str_loading_data">Loading data. Please Wait.</string>
+    
+    
+   
     
        
     <!-- Weather Info for Activity -->

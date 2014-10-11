@@ -1,22 +1,16 @@
 package com.slm_ospiui;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -91,13 +85,10 @@ public class MainActivity extends Activity
             	String URL = "http://192.168.0.41:8080";
             	
             	Log.d(LOGTAG, "URL = "+URL+"  command = "+command);
-            	
-  //SLM1          	GET(URL+command);
-            	
+            	            	
             	// call AsynTask to perform network operation on separate thread
         		new HttpAsyncTask().execute("http://192.168.0.41:8080"+command);
             	
-
         	}
         });
         
@@ -140,60 +131,19 @@ public class MainActivity extends Activity
 	
 	public static String GET(String url)
 	{
-	    InputStream inputStream = null;
 	    String result = "";
 	    
 	    Log.d("In GET   ", url);
 	    
 	    try 
 	    {
-	 
-	    //SLM	   URL ospurl = new URL("http://192.168.0.41:8080");
-	    	
-	    	URL ospurl = new URL(url);
-	    	   
-	    	   Log.d("GET  ", "Here 1 ");
-	   	    
-	   	    
-	    	   
-	    	   HttpURLConnection urlConnection = (HttpURLConnection) ospurl.openConnection();
+	        Document doc  = Jsoup.connect(url).get();
 
-	    	   Log.d("GET  ", "Here 2 ");
-	    	   
-	    	   inputStream =  new BufferedInputStream(urlConnection.getInputStream());
-	    	   
-	    	//   inputStream =  new BufferedInputStream(urlConnection.)
-
-	    	   Log.d("GET  ", "Here 3 ");
-
-	    	   
-/*SLM1
-  	        // create HttpClient
- 
-	        HttpClient httpclient = new DefaultHttpClient();
-	 
-	        Log.d("GET  ", "Here 4 ");
+	        Log.d("GET", "doc = "+doc.toString());
 	        
-	        // make GET request to the given URL
-	        HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
-	 
-	        Log.d("GET  ", "Here 5 ");
+	        result = doc.body().text();
 	        
-	        // receive response as inputStream
-	        inputStream = httpResponse.getEntity().getContent();
-	        
-	        Log.d("GET  ", "Here 6 ");
-*/	 
-	        // convert inputstream to string
-	        if(inputStream != null)
-	        {
-	        	Log.d("GET  ", "Here 4 ");
-	            result = convertInputStreamToString(inputStream);
-	        }
-	        else
-	        {
-	            result = "Did not work!";
-	        }
+	        Log.d("GET", "result = "+ result );
 	 
 	    } 
 	    catch (NullPointerException e1) 
@@ -210,7 +160,7 @@ public class MainActivity extends Activity
      	return result;
     }
     
-    
+/*    
      private static String convertInputStreamToString(InputStream inputStream) throws IOException
      {
         BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
@@ -226,7 +176,8 @@ public class MainActivity extends Activity
         return result;
  
     }
-    
+*/
+	
     private class HttpAsyncTask extends AsyncTask<String, Void, String> 
     {
     	
@@ -257,7 +208,6 @@ public class MainActivity extends Activity
         int 		position;
         TextView  	cirNumTV;
         TextView  	cirNameTV;
-        TextView  	manualLabelTV;
         Chronometer cirChrono;
         ToggleButton cirOnOffTButton;
     }
@@ -350,8 +300,7 @@ public class MainActivity extends Activity
                 
                 holder.cirNumTV = (TextView) convertView.findViewById(R.id.circuit_num_tv);
                 holder.cirNameTV = (TextView) convertView.findViewById(R.id.circuit_name_tv);
-                holder.manualLabelTV = (TextView) convertView.findViewById(R.id.manual_label_tv);
-               
+                
                 holder.cirOnOffTButton  = (ToggleButton) convertView.findViewById(R.id.cir_toggle_button);
                 holder.cirOnOffTButton.setTag(position);
                 
@@ -460,7 +409,6 @@ public class MainActivity extends Activity
             ListItem item = list.get(position);
             holder.cirNumTV.setText(item.cirNum);
             holder.cirNameTV.setText(item.cirName);
-            holder.manualLabelTV.setText(R.string.str_manual);
             holder.position = item.getPosition();
             
             holder.cirOnOffTButton.setChecked((item.toggleBtnState == 1));
