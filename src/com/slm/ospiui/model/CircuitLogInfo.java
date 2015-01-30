@@ -1,13 +1,14 @@
 package com.slm.ospiui.model;
 
-import java.io.Serializable;
+//import java.io.Serializable;
 
-public class CircuitLogInfo implements Serializable
+public class CircuitLogInfo 
+//implements Serializable
 {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -7598439235202263571L;
+//	private static final long serialVersionUID = -7598439235202263571L;
 
 //	int mPosition;
 	

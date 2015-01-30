@@ -4,8 +4,11 @@ package com.slm_ospiui;
 public class ListItem 
 {
 	String 	cirNum;
+	int		cirNumber;
     String 	cirName;
-    int 	cirType; 
+   
+    
+	int 	cirType; 			// 1=> MASTER; 0=> REGULAR
     int 	toggleBtnState;
     long 	startTime;
     long 	stopTime;
@@ -25,13 +28,43 @@ public class ListItem
     	
     	
     }
+    public ListItem ( String cirNum, int cirNumber, String cirName, int cirType, int position )
+    {
+    	this.cirNum = cirNum;
+    	this.cirNumber = cirNumber;
+    	this.cirName = cirName;
+    	this.cirType = cirType;  
+    	this.position = position;
+    	this.toggleBtnState = 0;  //OFF
+    	this.startTime = 0;
+    	this.displayTime = 0;
+    	this.stopTime = 0;
+    	
+    	
+    }
+    
     public String getCirNum ()
     {
     	return this.cirNum;
     }
+    public void setCirNum(String cirNum) 
+    {
+		this.cirNum = cirNum;
+	}
     public String getCirName ()
     {
     	return this.cirName;
+    }
+    public void setCirName(String cirName) 
+    {
+		this.cirName = cirName;
+	}
+    public int getCirNumber() {
+		return cirNumber;
+	}
+    public void setCirNumber ( int number )
+    {
+    	this.cirNumber = number;
     }
     public int getCirType ()
     {
