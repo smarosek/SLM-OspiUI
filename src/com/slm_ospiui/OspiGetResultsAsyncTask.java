@@ -36,7 +36,7 @@ public class OspiGetResultsAsyncTask extends AsyncTask<String, Void, String>
        // pD.setMessage(getResources().getText(R.string.str_loading_data));
        // pD.setIndeterminate(true);
        // pD.setCancelable(true);
-        pdialog.setTitle(R.string.str_loading_data);
+        pdialog.setTitle(R.string.str_retreiving_data);
         pdialog.setCancelable(false);
         pdialog.show();
     }

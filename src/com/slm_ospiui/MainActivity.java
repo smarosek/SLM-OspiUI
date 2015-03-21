@@ -5,29 +5,26 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import com.slm.ospiui.model.Circuit;
 
+import de.greenrobot.event.EventBus;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.AssetManager;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
-
 import android.util.Log;
-
 import android.view.View;
-
 import android.widget.Button;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 /**
@@ -58,6 +55,9 @@ public class MainActivity extends Activity implements OspiResultsListener
     private static final String GET_ALL_CIRCUITS = "/sn0";
     
     // Set controller to manual mode => http://x.x.x.x/cv?pw=opendoor&mm=1
+    
+    // Turn on circuit => http://x.x.x.x/sn1=1 (turn on the first station)
+    
     
     // For now make this a static final string (updated 1/15/15)
     static final String URL = "http://192.168.1.41:8080";
@@ -199,7 +199,7 @@ public class MainActivity extends Activity implements OspiResultsListener
 			maCircuits[i].setCircOn(false);	
 		
 			
-			ListItem lItem = new ListItem ( "Circuit "+j,
+			ListItem lItem = new ListItem ( "C"+j,
 					maCircuits[i].getCircNum(), maCircuits[i].getCircName(),  
 					( maCircuits[i].isMaster() ? 1: 0), i );
 			
@@ -241,6 +241,18 @@ public class MainActivity extends Activity implements OspiResultsListener
 		new OspiGetResultsAsyncTask(activityContext).execute(URL+command);
 	}
 	
+	public void SendMessage( String command )
+	{
+		mCommand = command;
+		
+		Log.d(LOGTAG, "command = "+command);
+    	
+    	// call AsynTask to perform network operation on separate thread
+		// new OspiGetResultsAsyncTask(this).execute
+		//    ("http://192.168.0.41:8080"+command);
+		new OspiGetResultsAsyncTask(activityContext).execute(command);
+	}
+	
 	
 	public void SetCircuitStatus( String command )
 	{
@@ -248,6 +260,14 @@ public class MainActivity extends Activity implements OspiResultsListener
 	}
 	
 
+	// This method will be called when a CircuitOnOffEvent is posted
+    public void onEvent(CircuitOnOffEvent event)
+    {
+        Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show();
+    	//String message = "Got circuit "+event.mCircuitNum+" to be turned "+(event.mStatus == 0 ? "OFF":"ON");
+    	//Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        SendMessage( event.message );
+    }
 
 
 	@Override
@@ -265,6 +285,8 @@ public class MainActivity extends Activity implements OspiResultsListener
          }
          ShowResult( mResult );
 	}
+	
+	
 	public void ShowResult( String result )
 	{
 		mResultTV.setText(result);
@@ -282,6 +304,9 @@ public class MainActivity extends Activity implements OspiResultsListener
         //  Called after onCreate() OR onRestart()
         //  Called after onStop() but process has not been killed.
         super.onStart();
+        
+        //SLMEB
+        EventBus.getDefault().register(this);
         
         // Refresh the circuit states.
         SendCommand("/sn0");
@@ -325,6 +350,10 @@ public class MainActivity extends Activity implements OspiResultsListener
     {
     	//  The Activity is no longer visible
         if (DEBUG) Log.d (LOGTAG, "onStop");
+        
+        //SLMEB
+        EventBus.getDefault().unregister(this);
+        
         super.onStop();
     }
     

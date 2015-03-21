@@ -38,7 +38,7 @@
 		<!-- android:background="@color/lt_blue" -->
        	<!-- android:background="@drawable/mybg" -->
          	    
-         	    
+   		<!-- NEVER use layout_height="wrap_content" for ListView, per GOOGLE I/O video -->    
 	  	<ListView
 	      	android:id="@+id/list_view"
 		    android:layout_width="match_parent"

@@ -30,4 +30,11 @@
 		<nature>com.android.ide.eclipse.adt.AndroidNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>libs/eventbus-2.4.0.jar</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/Software/eventbus-2.4.0.jar</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>

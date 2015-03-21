@@ -1,0 +1,26 @@
+# Compiled source #
+###################
+*.class
+*.dex
+
+
+# Packages #
+############
+# it's better to unpack these files and commit the raw sourcee
+*.dmg
+*.apk
+# *.jar
+
+
+# Logs and databases #
+######################
+*.log
+
+
+# OS generater files #
+######################
+.DS_Store
+.DS_Store?
+._*
+
+/bin/

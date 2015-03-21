@@ -2,33 +2,50 @@ package com.slm_ospiui;
 
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
+import android.app.Activity;
+import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.content.Context;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Chronometer;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-
-
     
 /**
- * Custom list class for sprinkler circuit description for handling  
- * manual mode spriner operation.
+ * 
  * @author Susan Marosek
+ * CustomListAdapter - Custom list class for sprinkler circuit description for   
+ * handling manual mode sprinkler operation.
+ */
+
+/*
+ * Modification History:
+ * 	
+ * 	02/25/15 Begin
+ * 	03/11/15 Remove excess info from ViewHolder (listItem, duration). Also
+ * 			
  */
 public class CustomListAdapter extends BaseAdapter
 {
     private static final String LOGTAG = "CustomListAdapter";
+    private static final String LOGTAG_POS = "HolderPos";
+    
     private static final boolean DEBUG = true;
+    private static final boolean DEBUG_EVENT_BUS = false;
+    
+    
 //    private static final boolean DEBUG1 = true;
 //    private static final boolean DEBUG2 = true;
 	
+    
+    
     private Context          mParentContext;
     private List<ListItem>   list;
     private LayoutInflater   layoutInflater;
@@ -91,13 +108,24 @@ In other words this method returns how many different layouts we have in our Lis
     }
     
     
+    /* 
+     * getView		
+     * Desc: 	Get a View that displays the data at the specified position 
+     * 			in the data set.
+     * Parameters:
+     * 		position 	- position of item within the adapter's data set 
+     * 					(the list) of item whose view we want.
+     * 		convertView - The old view to reuse, if possible. 
+     * 		parent 		- parent that this view will eventually be attached to.
+     * 
+     * Returns: A View corresponding to data at the specified position.
+     */
     @Override
     public View getView (int position, View convertView, ViewGroup parent) 
     {    
     	if (DEBUG) 
         {
-    		Log.d(LOGTAG, "\n\nEntered getView() Position = "+position);
-    		Log.d(LOGTAG, "getView.convertView="+convertView);
+    		Log.d(LOGTAG_POS, "\n\nEntered getView() position = "+position);
         }
         
         if (list == null) {
@@ -122,142 +150,352 @@ In other words this method returns how many different layouts we have in our Lis
         
         if (convertView == null) 
         {
-            convertView = (LinearLayout) getLayoutInflator().inflate(R.layout.list_item, null);
+            convertView = (LinearLayout) getLayoutInflator().inflate(R.layout.list_item, parent, false);
             
             holder = new ViewHolder();
-            
+
             // Need listItem in the view holder because I stored the 
             // item's position in the list, in the list so I can 
             // get that position to set toggle button & chronometer info
-            holder.listItem = list.get(position);
-            holder.position = holder.listItem.getPosition();
+//LSM            holder.listItem = list.get(position);
+            //SLM tmp
+            ListItem li1 = list.get(position);
+            //This position is important
+            holder.position = li1.getPosition();
             
+            Log.d(LOGTAG_POS, "holder.position = li1.getPosition() = "+holder.position);
+            
+         
             holder.cirNumTV = (TextView) convertView.findViewById(R.id.circuit_num_tv);
             holder.cirNameTV = (TextView) convertView.findViewById(R.id.circuit_name_tv);
             
             holder.cirOnOffTButton  = (ToggleButton) convertView.findViewById(R.id.cir_toggle_button);
-            holder.cirOnOffTButton.setTag(position);
+            //WAS0309 holder.cirOnOffTButton.setTag(position);
+            holder.cirOnOffTButton.setTag(holder);
             
-            holder.cirChrono  = (Chronometer) convertView.findViewById(R.id.chronometer);
+            holder.cirSetTimerButton  = (Button) convertView.findViewById(R.id.cir_settimer_button);
+            //WAS0311 holder.cirSetTimerButton.setTag(position);
+            holder.cirSetTimerButton.setTag(holder);
             
+           //SLMTimer  holder.cirChrono  = (Chronometer) convertView.findViewById(R.id.chronometer);
+            holder.cirChronoSTV  = (STimerView) convertView.findViewById(R.id.chronometer_stv);
+            holder.cirChronoSTV.setTag(holder);
+            holder.cirChronoSTV.addTimerStopListener(new TimerStopListener ()
+            {
+            	public void OnTimeout( TimerStopEvent e )
+            	{
+            		View v = (View) e.getSource();
+            		if ( DEBUG )
+            			Log.d(LOGTAG, "GOT OnTimeout EVENT!!!  v = "+
+            					v.getClass().toString());
+            		
+            		// Our ViewHolder contains the correct position in list.
+            		// We'll use this to set correct ???
+            		ViewHolder mH = (ViewHolder)v.getTag();
+            		
+            		// Get list item at position and set the ???
+            		//ListItem li = list.get(mH.position);
+            		mH.cirOnOffTButton.setChecked(false);
+            		
+            		// Need to send message / Event to turn off the circuit
+            		// Posts message/event so MainActivity's onEvent() is 
+            		// called which in turn calls SendMessage() to OpenSprinkler Web App
+            		// by starting OspiGetResultsAsyncTask.
+            		// TMP SLM 0305 - yes correct position
+    				//SLMEB
+            		if ( DEBUG_EVENT_BUS )
+            			Log.d(LOGTAG, "Posting OFF to EventBus");
+            		
+    				EventBus.getDefault().post(new CircuitOnOffEvent(
+    						CircuitOnOffEvent.CIRCUIT_OFF, 
+    						mH.position+1));
+            		
+            		list.get(mH.position).setToggleBtnState(0);
+            		list.get(mH.position).setStopTime(System.currentTimeMillis());
+            		if ( DEBUG )
+            			Log.d(LOGTAG_POS, "Event!!!  list["+
+            					mH.position+"] = "+ list.get(mH.position).toStringAll());
+            	}
+            });
+            
+            
+            holder.cirDurationSTTV  = (STimeTextView) convertView.findViewById(R.id.duration_stv);
+            holder.cirDurationSTTV.setTag(holder);
+            //SLM4
+            holder.cirDurationSTTV.addTimerSetListener(new TimerSetListener ()
+            {
+            	public void OnTimerSet( TimerSetEvent e )
+            	{
+            		// Get view (the STimeTextView that was changed by the 
+            		// TimePickerDialogFragment so that we can set the 
+            		// appropriate duration value in the list to be retrieved
+            		// when listview is scrolled.
+            		View v = (View) e.getSource();
+            		
+            		if ( DEBUG )
+            			Log.d(LOGTAG, "GOT OnTimerSet EVENT!!!  v = "+
+            					v.getClass().toString());
+            		
+            		// Our ViewHolder contains the correct position in list.
+            		// We'll use this to set correct displahyDuration item
+            		ViewHolder mH = (ViewHolder)v.getTag();
+            		
+            		// Get list item at position and set the displayDuration
+            		ListItem li = list.get(mH.position);
+            		li.setDisplayDuration(((STimeTextView) v).GetTimeMs());
+            	
+            		if ( DEBUG )
+            			Log.d(LOGTAG_POS, "Event!!!  ListItem["+
+            					mH.position+"] = "+ li.toStringAll());
+            	}
+            });
+            
+            
+            
+            Log.d(LOGTAG_POS, "1 $$$  ListItem["+position+"] = "+li1.toStringAll());
+
             convertView.setTag(holder); 
 
-            // Need final variable to be able to access inside onClick(), 
-            final ViewHolder newHolder = holder;
-            
+            /////////////////////////////////////////////////////////////
             // Handle ToggleButton clicks
             holder.cirOnOffTButton.setOnClickListener(new ToggleButton.OnClickListener() 
             {                	
                 @Override
                 public void onClick (final View v) 
                 {
-                	// Get position that we saved as tag for the ToggleButton
-                	int pos = (Integer)v.getTag();
+                	// Get view holder that we saved as tag for the ToggleButton
+                	ViewHolder mH = (ViewHolder)v.getTag();
                 	
                 	ToggleButton btn = (ToggleButton) v;
                 	long startTime = 0;
                 	long stopTime = 0;
 
                 	if ( DEBUG )
-                	{	Log.d(LOGTAG, "*");
-                		Log.d(LOGTAG, "*");
+                	{
+                		Log.d(LOGTAG_POS, "mH.position = "+ mH.position);
+                		Log.d(LOGTAG_POS, "*");
+                		Log.d(LOGTAG_POS, "*");
                 	}
                 	
                 	// If button is checked, start chronometer
                 	if (btn.isChecked() )
                 	{
+                		// This startTime is used to log the circuit watering data
+                		startTime = System.currentTimeMillis();
+                		
                 		if ( DEBUG )
                 		{
-                			Log.d(LOGTAG, "  newHolder.position = "+
-                				newHolder.position);
-                			Log.d(LOGTAG, "   ToggleButton at position "+
-                				pos+" is checked. starttime is: "+                   				
-                				SystemClock.elapsedRealtime());
+                			Log.d(LOGTAG_POS, "   ToggleButton at position "+
+                					mH.position+" is checked. starttime is: "+                   				
+                					startTime );
                 		}
-                		newHolder.cirChrono.setBase(SystemClock.elapsedRealtime());
-                		startTime = SystemClock.elapsedRealtime();
-        				newHolder.cirChrono.start();	
-        				
-        			//	if ( newHolder.position == 0 )
-        			//	{
-        			//		Log.d( LOGTAG, "Clicked MASTER CIRCUIT button");
+                		                		
+                		// Zero out the circuit start Time and start runnable
+                		mH.cirChronoSTV.SetStartTime(0);
+                		mH.cirChronoSTV.PostTimerDelayed(0);
+                        
+                		// Posts message/event so MainActivity's onEvent() is 
+                		// called which in turn calls SendMessage() to OpenSprinkler Web App
+                		// by starting OspiGetResultsAsyncTask.
+                		// TMP SLM 0305 - yes correct position
+        				//SLMEB
+                		if ( DEBUG_EVENT_BUS )
+                			Log.d(LOGTAG, "Posting ON to EventBus");
+        				EventBus.getDefault().post(new CircuitOnOffEvent(
+        						CircuitOnOffEvent.CIRCUIT_ON, 
+        						mH.position+1));
         					
-        			//	}
-        				
                 	}
                 	else
                 	{	// Button is unchecked, stop chronometer and save time to DB
+                		
+                		// stopTime is used to log the circuit watering data
+                		stopTime = System.currentTimeMillis();
+                		
                 		if ( DEBUG )
                 		{
-                			Log.d(LOGTAG, "  newHolder.position = "+
-                				newHolder.position);
-                			Log.d(LOGTAG, "   ToggleButton at position "+
-                				pos+" is NOT checked. stoptime is: "+
-                				SystemClock.elapsedRealtime());
+                			Log.d(LOGTAG_POS, "   ToggleButton at mH.position "+
+                					mH.position+" is NOT checked. stoptime is: "+
+                					stopTime );
                 		}
-                		newHolder.cirChrono.stop();
-                		stopTime = SystemClock.elapsedRealtime();
                 		
+                		// Button is unchecked, stop timer (and save time to DB??)
+                		mH.cirChronoSTV.RemoveTimerCallbacks();
+                		
+                		
+                	
+                		// Posts message/event so MainActivity's onEvent() is 
+                		// called which in turn calls SendMessage() to OpenSprinkler Web App
+                		// by starting OspiGetResultsAsyncTask.
+                		//SLMEB
+                		if ( DEBUG_EVENT_BUS )
+                			Log.d(LOGTAG, "Posting OFF to EventBus");
+                		
+                		EventBus.getDefault().post(new CircuitOnOffEvent(
+                				CircuitOnOffEvent.CIRCUIT_OFF, 
+                				mH.position+1));
                 	}
                 	
-
-                	// Take care of updating toggle button state & 
+                	// Update toggle button state & 
                 	// chronometer-related fields when toggle button 
-                	// state changes      	
-                	int pos1 = newHolder.position;
-                	if ( DEBUG )
-                		Log.d(LOGTAG, " pos1 = "+pos1 );
-                	
-                	ListItem li;
-                	li = list.get(pos1);
-                	int b = (btn.isChecked() ? 1 : 0 );
-                	li.setToggleBtnState(b);
-                	
-                	if ( btn.isChecked() )
-                	{
-                		// Save startTime to list, chronometer is running
-                		li.setStartTime(startTime);
-                	}
-                	else
-                	{
-                		// Chronometer is not running, save stopTime 
-                		// Actually it's a duration
-                		li.setStopTime( stopTime - li.getStartTime());
-                	}
-                	// Update List
-                	list.set( pos1,  li );
-                	if ( DEBUG )
-                	{
-                		Log.d(LOGTAG, "1 list row "+pos1+" updated: "+
-                					li.toStringAll()); 
-                		Log.d(LOGTAG, "*");
-                		Log.d(LOGTAG, "*");
-                	}
-                }
-            });         
-        }
+                	// state changes. Position we're sending is position in the List  	
+                	int pos1 = mH.position;
+                	UpdateListItemElementsState( btn.isChecked(), pos1, startTime, stopTime );
+                	            	
+                }	// end onClick()
+            });  	// end holder.cirOnOffTButton.setOnClickListener(new ToggleButton.OnClickListener()                
+            
+         // Handle SetTimer Button click
+            holder.cirSetTimerButton.setOnClickListener(new Button.OnClickListener() 
+            {                	
+                @Override
+                public void onClick (final View v) 
+                {
+                	// Get viewHolder that we saved as tag for the Button
+                	ViewHolder mH = (ViewHolder)v.getTag();
+	            
+            		if ( DEBUG )
+            		{
+            			Log.d(LOGTAG_POS, "   Button at mH.position "+
+            					mH.position+" was clicked ");
+            		}
+            		
+            		FragmentManager fm = ((Activity) mParentContext).getFragmentManager();
+            		
+            		// Pass ViewHolder in so can set correct List item instance 
+            		DialogFragment newFragment = new TimerPickerDialogFragment(mH);
+    				newFragment.show(fm, "timerPicker");
+          		
+                	Log.d(LOGTAG, "##### AFTER newFragment");	
+    				
+                }	// end onClick()
+            });  	// end holder.cirSetTimerButton.setOnClickListener(new Button.OnClickListener()  
+            
+            
+            
+
+            
+            
+            
+        }	// end convertView == null
         else 
         {
-        	// At this point, holder is pointing to the view that got
-        	// scrolled off. Need to put new row info into it
+        	// At this point, holder is still pointing to the view / ListItem  
+        	// that got scrolled off. Need to replace this info with the info
+        	// that was saved in the convertView "Tag" in above section, i.e. 
+        	// convertView == null the first time this item was displayed.
         	holder = (ViewHolder) convertView.getTag();
-        	if ( DEBUG )
-        		Log.d(LOGTAG, "!!! else holder.position = "+holder.position);
+   	
         }
         
-        // Handle setting list row info when row is visible 
-        // (includes when a row becomes visible due to scrolling)           
+        
+        /*********************************************************************/
+        /*********************************************************************/
+        /*********************/
+        ManageViewHolderElements( holder, position );
+        
+        Log.d(LOGTAG_POS, "Exitting getView");   
+        return convertView;
+    }
+    
+    
+    
+    /*********************/
+    
+    /* 
+     * Update ListItem elements, i.e. toggle button state & 
+     * timer-related fields when toggle button state changes.
+     * Called in "if (convertView == null)" section of getView() (not scrolled)
+     * within the holder.cirOnOffTButton.setOnClickListener definition in the 
+     * onClick() method. Executed when toggle button state changes (doesn't 
+     * matter whether toggle button is checked or not.
+     * ONLY CALLED ON TOGGLE BUTTON CLICK
+     *  
+     */
+    private void UpdateListItemElementsState( boolean isChecked, int pos1, long startTime, long stopTime )
+    {
+    	// This position should be the position in the List
+    	Log.d(LOGTAG_POS, "In UpdateListItemElementsState   pos1 = "+ pos1);
+    	ListItem li;
+		li = list.get(pos1);
+		int b = (isChecked ? 1 : 0 );
+		li.setToggleBtnState(b);
+		
+		if ( isChecked )
+		{
+			// Save startTime to list, chronometer is running
+			li.setStartTime(startTime);
+		}
+		else
+		{
+			Log.d(LOGTAG, "In else");
+			
+			// Chronometer is not running, save stopTime ??and duration 
+			li.setStopTime( stopTime );
+			
+			// Set Duration
+			//WAS 3/2 li.setDuration( li.getStopTime() - li.getStartTime());
+			/*Don't think I want to change this duration
+			Log.d(LOGTAG, "Before SetDuration CHECK!  li.getDuration() = "+li.getDuration());
+			li.setDuration( li.getStopTime() - li.getStartTime());
+			Log.d(LOGTAG, "CHECK!  li.getDuration() = "+li.getDuration());
+			*/
+			
+			// SLM_NOTE: logDuration will replace duration
+			li.setLogDuration( li.getStopTime() - li.getStartTime());
+			
+		}
+		
+		// Update List to reflect chrono-related info, startTimer/stopTime 
+		// and ToggleButton state
+		list.set( pos1,  li );
+		
+		if ( DEBUG )
+    	{
+    		Log.d(LOGTAG_POS, "1 list row "+pos1+" updated: "+
+    					li.toStringAll()); 
+    		Log.d(LOGTAG_POS, "*");
+    		Log.d(LOGTAG_POS, "*");
+    	}
+    }
+    
+    /*********************/
+    
+    /* 
+     * Handles setting list row info when row is visible (includes when a row 
+     * becomes visible due to scrolling).
+     * Called completely outside of the "if (convertView == null)" section of 
+     * getView(), near end of the method. 
+     * 
+     * SLM? Handles Timer/Chrono only because this element needs to stop being updated when it is out of view
+     * (i.e. scrolled off screen) and restarted at the appropriate increment in time when it is scrolled
+     * back onto the screen.
+     * 
+     * Updated 2/28
+     * Updated 3/11
+     */
+    
+    private void ManageViewHolderElements( ViewHolder holder, int position )
+    {       
+    	Log.d(LOGTAG_POS, "In ManageViewHolderElements, position = "+position);
+    	
         ListItem item = list.get(position);
+        
+        Log.d(LOGTAG_POS, "ListItem["+position+"] = "+item.toStringAll());
+        
         holder.cirNumTV.setText(item.cirNum);
         holder.cirNameTV.setText(item.cirName);
+        
+        holder.cirDurationSTTV.SetTime( item.displayDuration ); //SLM Correct duration?? YES
+        
+        // Need for sending correct item info to UpdateListItemElementsState
         holder.position = item.getPosition();
         
         holder.cirOnOffTButton.setChecked((item.toggleBtnState == 1));
         
         if ( DEBUG )
         {
-        	Log.d(LOGTAG, "holder.position = "+holder.position);
-        	Log.d(LOGTAG, "toggle button at "+position+" = "+ 
+        	Log.d(LOGTAG_POS, "toggle button at "+holder.position+" = "+ 
         				(item.toggleBtnState == 1));
         }
         // If toggle button is on
@@ -267,17 +505,16 @@ In other words this method returns how many different layouts we have in our Lis
         		Log.d( LOGTAG, "Handling togglebutton == true, startTime = "+
         				item.getStartTime());
 
-        	// Need to set chronometer's startTime & call start           	            	
-        	holder.cirChrono.setBase(item.getStartTime());
-        	holder.cirChrono.start();
+        	// Need to set chronometer's startTime & call start  
+        	holder.cirChronoSTV.SetStartTime(item.getStartTime());
+    		holder.cirChronoSTV.PostTimerDelayed(0);
         }
         else	// Toggle button is off
         {	
         	if (DEBUG )
         	{
-        		Log.d( LOGTAG, 
+        		Log.d( LOGTAG_POS, 
         			"Handling togglebutton == false, try setting to starttime");
-        		Log.d(LOGTAG, "ListItem["+position+"] = "+item.toStringAll());
         	}
         	// togglebutton is off. chronometer must show the duration
         	// of it's last run (if it ran).
@@ -286,27 +523,35 @@ In other words this method returns how many different layouts we have in our Lis
         	// To get the value of the last duration, need to 
         	// subtract the stopTime (stored in the list item) from 
         	// the SystemClock.elapsedRealtime() (or current time)
-        	long tmpTime = SystemClock.elapsedRealtime()-item.getStopTime();
+        	//SLMTimer  long tmpTime = SystemClock.elapsedRealtime()-item.getStopTime();    	
+        	
         	if ( item.getStartTime() != 0 )	
         	{	// Chronometer is stopped (at some non-zero time)
-        		holder.cirChrono.stop();
-        		holder.cirChrono.setBase( tmpTime );
-        	}
+        		long tmpTime = item.getStopTime() - item.getStartTime();
+        		holder.cirChronoSTV.RemoveTimerCallbacks();
+        		holder.cirChronoSTV.SetTime(tmpTime);
+           	}
         	else	
         	{	// Chronometer is in initial state, has never run & stopped
         		if ( DEBUG )
         			Log.d( LOGTAG, "startTime  = 0, stop Chrono and reset" );
-        		holder.cirChrono.stop();
-        		holder.cirChrono.setBase( SystemClock.elapsedRealtime() );
+        		
+        		// Chronometer is in initial state, has never run & stopped
+        		holder.cirChronoSTV.RemoveTimerCallbacks();
+        		holder.cirChronoSTV.SetTime(0);
         	}
         }
-        if ( DEBUG )
-        {	Log.d(LOGTAG, "End getView()");
-        	Log.d(LOGTAG, "*");
-        	Log.d(LOGTAG, "*");
+
+         if ( DEBUG )
+        {	Log.d(LOGTAG_POS, "End ManageViewHolderElements()");
+        	Log.d(LOGTAG_POS, "*");
+        	Log.d(LOGTAG_POS, "*");
         }
-        return convertView;
     }
+    
+    
+
+    /*********************/
     
     private LayoutInflater getLayoutInflator() 
     {
@@ -319,15 +564,65 @@ In other words this method returns how many different layouts we have in our Lis
     
     
     
-
+    // ViewHolder should contain data that is static for each given row in list,
+    // per Google talk on ListViews.
 	static class ViewHolder 
 	{
-		ListItem 	listItem;
-	    int 		position;
-	    TextView  	cirNumTV;
-	    TextView  	cirNameTV;
-	    Chronometer cirChrono;
-	    ToggleButton cirOnOffTButton;
+//		ListItem 		listItem;	// Not sure correct per above comment
+	    int 			position;	// Not sure correct per above comment
+	    							// 	But saw example on Android Developers
+	    							//	that showed position in the ViewHolder. 
+	    							//	Unfortunately it didn't show it's usage.
+	    TextView  		cirNumTV;
+	    TextView  		cirNameTV;
+	    //SLMTimer 		Chronometer cirChrono;
+	    STimerView 		cirChronoSTV;
+	    ToggleButton 	cirOnOffTButton;
+	    Button			cirSetTimerButton;
+	    STimeTextView 	cirDurationSTTV;
+	    long			cirDurationMs;	// Not sure correct per above comment
+	    
+
+        
+        
+ /*       
+	    long GetDurationMs()
+	    {
+	    	// TMP
+	    	return 0;
+//SLM2	    	return listItem.getDisplayDuration();
+	    }
+	 
+	    // As a side effect, this method also sets the ListItem's 
+	    // durationDisp value
+	    void SetDurationMs( int min, int sec )
+	    {
+	    	cirDurationMs = min*60*1000 + sec*1000;
+//SLm2	    	listItem.setDisplayDuration(cirDurationMs);
+	    	
+//SLM2	    	Log.d(LOGTAG_POS, "$$$ In ViewHolder.SetDurationMs() listItem = "+listItem.toStringAll());
+	    	
+	    }
+	    
+	    int GetDDurationMin()
+	    {
+	    	//int minutes = (int)(listItem.displayDuration / 1000 / 60);
+	    	//Log.d( LOGTAG, "In GetDDurationMin() minutes = "+minutes);
+//SLM2	    	return listItem.GetDDurationMin();
+	    	//TMP
+	    	return 0;
+	    
+	    }
+	    int GetDDurationSec()
+	    {
+	    	//int seconds = (int)((displayDuration / 1000) % 60);
+	    	//Log.d( LOGTAG, "In GetDDurationSec() seconds = "+seconds);
+//SLM2	    	return listItem.GetDDurationSec();
+	    	// TMP
+	    	return 0;
+	    }
+*/	    
+	    
 	}
 
 } 

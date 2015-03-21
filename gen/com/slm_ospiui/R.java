@@ -83,21 +83,28 @@ public final class R {
         public static final int toggleindicatorshape=0x7f020004;
     }
     public static final class id {
-        public static final int action_settings=0x7f09000a;
-        public static final int chronometer=0x7f090004;
-        public static final int cir_toggle_button=0x7f090002;
+        public static final int action_settings=0x7f09000f;
+        public static final int chronometer=0x7f090006;
+        public static final int chronometer_stv=0x7f090005;
+        public static final int cir_settimer_button=0x7f090002;
+        public static final int cir_toggle_button=0x7f090003;
         public static final int circuit_name_tv=0x7f090001;
         public static final int circuit_num_tv=0x7f090000;
-        public static final int command_et=0x7f090009;
-        public static final int get_button=0x7f090007;
-        public static final int list_view=0x7f090006;
-        public static final int man_op_tv=0x7f090005;
-        public static final int result_tv=0x7f090008;
-        public static final int timed_cb=0x7f090003;
+        public static final int colon_tv=0x7f09000d;
+        public static final int command_et=0x7f09000b;
+        public static final int duration_stv=0x7f090004;
+        public static final int get_button=0x7f090009;
+        public static final int list_view=0x7f090008;
+        public static final int man_op_tv=0x7f090007;
+        public static final int minutesPicker=0x7f09000c;
+        public static final int result_tv=0x7f09000a;
+        public static final int secondsPicker=0x7f09000e;
     }
     public static final class layout {
         public static final int list_item=0x7f030000;
-        public static final int main=0x7f030001;
+        public static final int list_item_old=0x7f030001;
+        public static final int main=0x7f030002;
+        public static final int timer_picker_frag_dialog=0x7f030003;
     }
     public static final class menu {
         public static final int main=0x7f080000;
@@ -108,37 +115,46 @@ public final class R {
         /**  Titles 
          */
         public static final int str_circuit_info=0x7f060002;
-        public static final int str_comma=0x7f060015;
-        public static final int str_command=0x7f060018;
-        public static final int str_dashes=0x7f060014;
-        public static final int str_dashes2=0x7f060013;
-        public static final int str_date=0x7f06000b;
-        public static final int str_day=0x7f060010;
-        public static final int str_description=0x7f060012;
-        public static final int str_empty=0x7f060016;
-        public static final int str_forecast=0x7f06000a;
-        /**  Weather Info for Activity 
-         */
-        public static final int str_forecast_data=0x7f060009;
-        /**   Testing / Temp strings 
-         */
-        public static final int str_get=0x7f060017;
-        public static final int str_high=0x7f06000c;
-        /**  Dialog Box Text 
-         */
-        public static final int str_loading_data=0x7f060008;
-        public static final int str_low=0x7f06000d;
+        public static final int str_colon=0x7f06001c;
+        public static final int str_comma=0x7f06001b;
+        public static final int str_command=0x7f06001f;
+        public static final int str_dashes=0x7f06001a;
+        public static final int str_dashes2=0x7f060019;
+        public static final int str_date=0x7f060011;
+        public static final int str_day=0x7f060016;
+        public static final int str_description=0x7f060018;
         /**  Labels 
          */
-        public static final int str_manual=0x7f060004;
+        public static final int str_duration=0x7f060004;
+        public static final int str_empty=0x7f06001d;
+        public static final int str_forecast=0x7f060010;
+        /**  Weather Info for Activity 
+         */
+        public static final int str_forecast_data=0x7f06000f;
+        /**   Testing / Temp strings 
+         */
+        public static final int str_get=0x7f06001e;
+        public static final int str_high=0x7f060012;
+        /**  Hint Strings 
+         */
+        public static final int str_hint_c1=0x7f06000a;
+        public static final int str_hint_circuit=0x7f06000b;
+        public static final int str_hint_mm_ss=0x7f06000c;
+        /**  Dialog Box Text 
+         */
+        public static final int str_loading_data=0x7f06000d;
+        public static final int str_low=0x7f060013;
+        public static final int str_manual=0x7f060005;
         public static final int str_manual_op=0x7f060003;
-        public static final int str_night=0x7f060011;
-        public static final int str_precip=0x7f06000f;
-        public static final int str_result=0x7f060019;
-        public static final int str_temperature=0x7f06000e;
-        public static final int str_time_expired=0x7f060005;
-        public static final int str_time_rem=0x7f060006;
-        public static final int str_timed=0x7f060007;
+        public static final int str_night=0x7f060017;
+        public static final int str_precip=0x7f060015;
+        public static final int str_result=0x7f060020;
+        public static final int str_retreiving_data=0x7f06000e;
+        public static final int str_set_timer=0x7f060006;
+        public static final int str_temperature=0x7f060014;
+        public static final int str_time_expired=0x7f060007;
+        public static final int str_time_rem=0x7f060008;
+        public static final int str_timed=0x7f060009;
     }
     public static final class style {
         /** 

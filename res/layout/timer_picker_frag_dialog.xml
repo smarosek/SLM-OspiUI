@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" 
+    android:gravity="center_horizontal"
+    >
+
+	<NumberPicker
+	    android:id="@+id/minutesPicker"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	     />
+
+	<TextView
+	    android:id="@+id/colon_tv"
+	    android:layout_width="wrap_content"
+	    android:layout_height="match_parent"
+	    android:gravity="center_vertical"
+	    android:text="@string/str_colon" />
+	
+	<!-- android:textSize="@dimen/tiny_label_text_sz" -->
+	<NumberPicker 
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content" 
+		android:id="@+id/secondsPicker"
+		/>
+	
+	
+</LinearLayout>
