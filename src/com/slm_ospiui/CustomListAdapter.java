@@ -198,7 +198,7 @@ In other words this method returns how many different layouts we have in our Lis
             		mH.cirOnOffTButton.setChecked(false);
             		
             		// Need to send message / Event to turn off the circuit
-            		// Posts message/event so MainActivity's onEvent() is 
+            		// Posts message/event so ManualModeActivity's onEvent() is 
             		// called which in turn calls SendMessage() to OpenSprinkler Web App
             		// by starting OspiGetResultsAsyncTask.
             		// TMP SLM 0305 - yes correct position
@@ -294,7 +294,7 @@ In other words this method returns how many different layouts we have in our Lis
                 		mH.cirChronoSTV.SetStartTime(0);
                 		mH.cirChronoSTV.PostTimerDelayed(0);
                         
-                		// Posts message/event so MainActivity's onEvent() is 
+                		// Posts message/event so ManualModeActivity's onEvent() is 
                 		// called which in turn calls SendMessage() to OpenSprinkler Web App
                 		// by starting OspiGetResultsAsyncTask.
                 		// TMP SLM 0305 - yes correct position
@@ -324,7 +324,7 @@ In other words this method returns how many different layouts we have in our Lis
                 		
                 		
                 	
-                		// Posts message/event so MainActivity's onEvent() is 
+                		// Posts message/event so ManualModeActivity's onEvent() is 
                 		// called which in turn calls SendMessage() to OpenSprinkler Web App
                 		// by starting OspiGetResultsAsyncTask.
                 		//SLMEB

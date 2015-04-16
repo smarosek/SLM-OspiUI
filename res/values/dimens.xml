@@ -11,6 +11,20 @@
      <dimen name="circuit_horizontal_left_top_margin">10dp</dimen>
     <dimen name="circuit_horizontal_left_margin">50dp</dimen>
     
+    <!-- Layout separators -->
+    <dimen name="layout_margin_default">5dp</dimen>
+    <dimen name="layout_margin_small">2dp</dimen>
+    <dimen name="layout_margin_medium">10dp</dimen>
+    <dimen name="layout_margin_large">20dp</dimen>
+    <dimen name="layout_margin_extra">30dp</dimen>
+    
+    <!-- Padding  -->
+    <dimen name="button_padding_default">5dp</dimen>
+    <dimen name="button_padding_small">2dp</dimen>
+    <dimen name="button_padding_large">10dp</dimen>
+    <dimen name="textview_padding_default">3dp</dimen>
+    <dimen name="spacing_padding_default">5dp</dimen>
+    
     <!-- Inter-circuit separating values -->
     <dimen name="label_button_vertical_margin">5dp</dimen>
 	<dimen name="button_chron_horizontal_margin">10dp</dimen>
@@ -19,13 +33,15 @@
 	<dimen name="list_divider_height">2dp</dimen>
 	
 	<!-- Spacing for weather forecast rows -->
+	
+	<!-- 
 	<dimen name="left_margin">5dp</dimen>
 	<dimen name="right_margin">15dp</dimen>
 	<dimen name="label_value_margin">12dp</dimen>
 	<dimen name="subcat_margin">15dp</dimen>
 	<dimen name="btwn_values_margin">20dp</dimen>
 	<dimen name="larger_left_margin">40dp</dimen>
-	
+	 -->
 	
 	
 	<!-- Trying sp here -->

@@ -20,7 +20,17 @@ public class STimeTextView extends TextView
 	private ArrayList<TimerSetListener> timerSetListenerList = new ArrayList<TimerSetListener>();
 	   
 	private long mTimeMs = 0; 
+	private boolean mIs24HourFormat = false;
 	 
+	///////////////////////////////////////////////////////////////
+	// NEED TO CHANGE THIS TO GENERALIZE. CURRENTLY IT SPECIFIES
+	// MINUTES & SECONDS AND REALLY SHOULD CHANGE TO BE MORE
+	// GENERAL. ManualModeActivity uses this for the timer time 
+	// which is in mm:ss but I now use it in ScheduleActivity for 
+	// start time which is hh:mm. 
+	// ALSO SHOULD ADD OPTION FOR 3 VALUED TIME hh:mm:ss.
+	///////////////////////////////////////////////////////////////
+	
 	public STimeTextView(Context context, AttributeSet attrs) 
 	{
 	    super(context, attrs);
@@ -30,6 +40,11 @@ public class STimeTextView extends TextView
 	{
 		return mTimeMs;
 	}
+	
+	public void Set24HourFormat( boolean val )
+    {
+		mIs24HourFormat = val;
+    }
 	
    // @Override
     public void SetTime( long ms )

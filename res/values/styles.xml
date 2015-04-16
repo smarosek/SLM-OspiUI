@@ -20,6 +20,9 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
         <item name="android:listViewStyle">@style/SLMListView</item>
      	<item name="android:textColor">@color/lt_gray</item> 
+     	
+     	<!-- New 3/25/15 -->
+		<item name="android:buttonStyle">@style/SLMButton</item>
     	
     </style>
     
@@ -33,6 +36,12 @@
 	<style name="SLMButton" parent="@android:style/Widget.Button">
 	    <item name="android:textColor">@color/black</item> 
 	    <item name="android:background">@color/med_gray</item> 
+  	</style>
+  	
+	<!--  NOt used nor complete nor correct -->
+	<style name="SLMCB" parent="@android:style/Widget.CompoundButton.CheckBox">
+
+	    <item name="android:background">@color/lt_gray</item> 
   	</style>
   	
 </resources>

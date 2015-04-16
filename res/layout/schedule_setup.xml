@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:textSize="@dimen/app_font_size"
+    >
+    <!-- android:weightSum="7" -->
+    
+
+    <!-- NOTE: Can specifiy android:padding="10dp" -->
+
+    <!-- Days of Week -->
+	<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/layout_margin_large"
+        android:paddingBottom="@dimen/layout_margin_large"
+		android:gravity="center_horizontal"
+        >
+        
+        
+        <!-- NOTE 1: padding is within the view -->
+        <!-- NOTE 2: Used :button=@null along with :drawableBottom attributes 
+        		to place checkbox below the label -->
+	    <CheckBox android:id="@+id/mon_cb"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/str_mon"
+	        android:button="@null"
+    		android:drawableBottom="?android:attr/listChoiceIndicatorMultiple" 
+    		android:paddingLeft="@dimen/spacing_padding_default"
+        	android:paddingRight="@dimen/spacing_padding_default"
+	        />
+	     	<!--    android:onClick="onCheckboxClicked"/> -->
+	    
+    	<CheckBox android:id="@+id/tue_cb"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/str_tue" 
+	        android:button="@null"
+    		android:drawableBottom="?android:attr/listChoiceIndicatorMultiple" 
+    		android:paddingLeft="@dimen/spacing_padding_default"
+        	android:paddingRight="@dimen/spacing_padding_default"
+	        />
+	    
+    	<CheckBox android:id="@+id/wed_cb"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/str_wed" 
+	        android:button="@null"
+    		android:drawableBottom="?android:attr/listChoiceIndicatorMultiple" 
+    		android:paddingLeft="@dimen/spacing_padding_default"
+        	android:paddingRight="@dimen/spacing_padding_default"
+	        />
+	    
+    	<CheckBox android:id="@+id/thu_cb"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/str_thu" 
+	        android:button="@null"
+    		android:drawableBottom="?android:attr/listChoiceIndicatorMultiple" 
+    		android:paddingLeft="@dimen/spacing_padding_default"
+        	android:paddingRight="@dimen/spacing_padding_default"
+	        />
+	    
+   		<CheckBox android:id="@+id/fri_cb"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/str_fri" 
+	        android:button="@null"
+    		android:drawableBottom="?android:attr/listChoiceIndicatorMultiple"
+    		android:paddingLeft="@dimen/spacing_padding_default"
+        	android:paddingRight="@dimen/spacing_padding_default" 
+	        />
+	    
+   		<CheckBox android:id="@+id/sat_cb"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/str_sat" 
+	        android:button="@null"
+    		android:drawableBottom="?android:attr/listChoiceIndicatorMultiple" 
+    		android:paddingLeft="@dimen/spacing_padding_default"
+        	android:paddingRight="@dimen/spacing_padding_default"
+	        />
+	    
+   		<CheckBox android:id="@+id/sun_cb"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        style="@style/SLMCB"
+	        android:text="@string/str_sun" 
+	        android:button="@null"
+    		android:drawableBottom="?android:attr/listChoiceIndicatorMultiple" 
+    		android:paddingLeft="@dimen/spacing_padding_default"
+        	android:paddingRight="@dimen/spacing_padding_default"
+	        />
+	    
+   	</LinearLayout>
+        
+	<!-- Circuits -->
+	<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/layout_margin_large"
+        android:paddingStart="@dimen/layout_margin_large"
+        android:paddingEnd="@dimen/layout_margin_large"
+         >
+   		
+        
+		<CheckBox android:id="@+id/c1_cb"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/str_hint_circuit" 
+    		android:paddingStart="@dimen/layout_margin_large"
+        	android:paddingEnd="@dimen/spacing_padding_default"
+	        />
+		<CheckBox android:id="@+id/c2_cb"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/str_hint_circuit" 
+    		android:paddingStart="@dimen/layout_margin_large"
+        	android:paddingEnd="@dimen/spacing_padding_default"
+	        />
+		<CheckBox android:id="@+id/c3_cb"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/str_hint_circuit" 
+    		android:paddingStart="@dimen/layout_margin_large"
+        	android:paddingEnd="@dimen/spacing_padding_default"
+	        />
+		<CheckBox android:id="@+id/c4_cb"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/str_hint_circuit" 
+    		android:paddingStart="@dimen/layout_margin_large"
+        	android:paddingEnd="@dimen/spacing_padding_default"
+	        />
+		<CheckBox android:id="@+id/c5_cb"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/str_hint_circuit" 
+    		android:paddingStart="@dimen/layout_margin_large"
+        	android:paddingEnd="@dimen/spacing_padding_default"
+	        />
+		<CheckBox android:id="@+id/c6_cb"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/str_hint_circuit" 
+    		android:paddingStart="@dimen/layout_margin_large"
+        	android:paddingEnd="@dimen/spacing_padding_default"
+	        />
+		<CheckBox android:id="@+id/c7_cb"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/str_hint_circuit" 
+    		android:paddingStart="@dimen/layout_margin_large"
+        	android:paddingEnd="@dimen/spacing_padding_default"
+	        />
+		<CheckBox android:id="@+id/c8_cb"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/str_hint_circuit" 
+    		android:paddingStart="@dimen/layout_margin_large"
+        	android:paddingEnd="@dimen/spacing_padding_default"
+	        />		
+	
+	
+	<!-- Settings -->
+	<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/layout_margin_large"
+        android:paddingBottom="@dimen/layout_margin_large"
+        android:paddingStart="@dimen/layout_margin_large"
+        android:paddingEnd="@dimen/layout_margin_large"
+        >
+        
+	    <!-- Starttime -->
+	    <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="horizontal"
+	        android:paddingStart="15dp"
+	        android:paddingEnd="15dp"
+	        android:paddingBottom="@dimen/layout_margin_medium"
+	        android:weightSum="6" 
+	        >
+        
+	    	<TextView
+	            
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="3"
+	            android:layout_gravity="end"
+	            android:text="@string/str_start_time_colon"
+	            android:labelFor="@+id/starttime_stv"
+	            />
+	    	<!-- android:id="@+id/starttime_label_tv" -->
+	    	
+	    	<com.slm_ospiui.STimeTextView
+	            android:id="@+id/starttime_sttv"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="1"
+	            
+	            android:gravity="start|bottom"
+	            android:hint="@string/str_hint_mm_ss"
+	            />
+	    	<!-- android:layout_gravity="right" -->
+	             
+			<TextView
+	            android:id="@+id/hhmm_tv"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="1"
+	            android:layout_gravity="center"
+	            android:text="@string/str_hhmm_parens"
+	            android:labelFor="@+id/starttime_sttv"
+	            />
+			
+			<Button
+		    	android:id="@+id/set_starttime_button"
+		  		android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:text="@string/str_set"
+				android:paddingRight="5dp"
+				android:paddingLeft="5dp"
+		    	/>
+	    
+		</LinearLayout>
+	    
+	   	<!-- Duration -->
+	    <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="horizontal"
+	        android:paddingBottom="@dimen/layout_margin_large"
+	        android:paddingStart="15dp"
+	        android:paddingEnd="15dp"
+	        >
+        
+	    	<TextView
+	            android:id="@+id/duration_label_tv"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center"
+	            android:text="@string/str_duration_colon"
+	            android:labelFor="@+id/duration_value_et"
+	            />
+	             
+	        <EditText
+	            android:id="@+id/duration_value_et"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+				android:layout_gravity="right"
+	          	android:paddingTop="0dp" 
+	          	android:minEms="3"                
+                android:hint="@string/str_hint_num" />
+	    
+	        <TextView
+	            android:id="@+id/mins_label_tv"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center"
+	            android:text="@string/str_mins"
+	            
+	            />
+		</LinearLayout>
+		
+	    <Button
+	    	android:id="@+id/submit_button"
+	  		android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/str_submit"
+			android:paddingRight="5dp"
+			android:paddingLeft="5dp"
+			android:paddingTop="5dp"
+			android:paddingBottom="5dp"
+		    	/>
+         
+	</LinearLayout>
+	
+	   	<!-- Row 1 -->
+<!--    	
+	    <LinearLayout
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:orientation="horizontal"
+	        android:paddingBottom="@dimen/label_button_vertical_margin"
+	        android:paddingLeft="5dp"
+	        android:paddingRight="5dp" >
+	        
+	        <TextView
+	            android:id="@+id/circuit1_num_sched_tv"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center"
+	            android:hint="@string/str_hint_c1"
+	            android:labelFor="@+id/duration1_sched_et"
+	            android:minEms="9"
+	            />
+	        
+	        
+	        <EditText
+	            android:id="@+id/duraation1_sched_et"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+				android:layout_gravity="right"
+	          	android:paddingTop="0dp" 
+	          	android:minEms="3"                
+                android:hint="@string/str_hint_num" />
+	      
+	        
+	        <TextView
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center"
+	            android:hint="@string/str_mins"
+	            />
+	        
+	
+	        
+		</LinearLayout>
+ -->			
+
+        
+</LinearLayout>	    
+
+        
+</LinearLayout>

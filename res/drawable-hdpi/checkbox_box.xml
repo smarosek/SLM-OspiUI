@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Not used nor correct  -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="true" 
+        android:drawable="@drawable/mybg"
+        android:state_focused="false">
+    </item>
+    <item android:state_checked="true" 
+        android:drawable="@drawable/mybg"
+        android:state_focused="true">
+    </item>
+    <item android:state_checked="false" 
+        android:drawable="@drawable/mybg"
+        android:state_focused="false">
+    </item>
+    <item android:state_checked="false" 
+        android:drawable="@drawable/mybg"
+        android:state_focused="true">
+    </item>
+</selector>

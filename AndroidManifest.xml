@@ -25,6 +25,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+                
+        <activity
+            android:name="ManualModeActivity"
+            android:label="@string/app_name"
+            />
+        
+        <activity
+            android:name="ScheduleActivity"
+            android:label="@string/app_name"
+            />
     </application>
 
 </manifest>
