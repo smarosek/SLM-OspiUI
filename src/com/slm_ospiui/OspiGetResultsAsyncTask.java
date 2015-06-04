@@ -121,7 +121,7 @@ public class OspiGetResultsAsyncTask extends AsyncTask<String, Void, String>
         pdialog.cancel();
         if (result != null && ospiResultsListener != null ) 
         {
-              ospiResultsListener.onResults(result);
+              ospiResultsListener.onOspiResults(result);
         }
         else
             Toast.makeText(mContext, 

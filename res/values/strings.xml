@@ -6,7 +6,8 @@
     
     <!-- Titles -->
    	<string name="str_circuit_info">Circuit Watering History</string>
-    <string name="str_manual_op">Manual Operation</string>    
+    <string name="str_manual_op">Manual Operation</string>  
+    <string name="str_program_schedule_summary">Program Schedule Summary</string>    
         
     
     <!-- Days of Week -->
@@ -19,17 +20,28 @@
     <string name="str_sun">Sun</string>        
     
     <!-- Labels -->
+    <string name="str_active">Active</string>
+    <string name="str_circuits_colon">Circuits: </string>
+    <string name="str_days_colon">Days: </string>
+    <string name="str_delete">Delete</string>
+    <string name="str_disabled">Disabled</string>
     <string name="str_duration">Duration</string>
     <string name="str_duration_colon">Duration: </string>
+    <string name="str_enabled">Enabled</string>
     <string name="str_hhmm_parens">(hh:mm)</string>
     <string name="str_manual">Manual</string>
     <string name="str_manual_mode">Manual Mode</string>
     <string name="str_mins">mins</string>
+    <string name="str_program_colon">Program: </string>
+    <string name="str_program_id_colon">Prog ID: </string>
+    <string name="str_repeat_colon">Repeat: </string>
+    <string name="str_running">Running</string>
     <string name="str_schedule">Schedule</string>
     <string name="str_set">Set</string>
     <string name="str_set_timer">Set Timer</string>
     <string name="str_submit">Submit</string>
     <string name="str_start_time_colon">Start Time: </string>
+    <string name="str_summary">Summary</string>
     <string name="str_time_expired">Time Expired</string>
     <string name="str_time_rem">Time Remaining</string>
     <string name="str_timed">Timed</string>
@@ -39,6 +51,8 @@
     <!-- Hint Strings -->
     <string name="str_hint_c1">C1</string>
     <string name="str_hint_circuit">Circuit</string>
+    <string name="str_hint_dashes"> --- </string>
+    <string name="str_hint_disabled">disabled</string>
     <string name="str_hint_mm_ss">00:00</string>
     <string name="str_hint_num">   0</string>
     
@@ -62,7 +76,6 @@
     <string name="str_description">Description:</string>
     
     <string name="str_dashes2"> --- </string>
-    <string name="str_dashes"> --- </string>
     <string name="str_comma"> ,  </string>
     <string name="str_colon"> :  </string>
     <string name="str_empty"> </string>

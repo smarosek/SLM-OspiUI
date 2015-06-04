@@ -2,6 +2,8 @@ package com.slm_ospiui;
 
 import java.util.List;
 
+import com.slm.ospiui.model.OspiMessageHandler;
+
 import de.greenrobot.event.EventBus;
 import android.app.Activity;
 import android.app.DialogFragment;
@@ -45,18 +47,24 @@ public class CustomListAdapter extends BaseAdapter
 //    private static final boolean DEBUG2 = true;
 	
     
-    
-    private Context          mParentContext;
-    private List<ListItem>   list;
-    private LayoutInflater   layoutInflater;
+    private OspiMessageHandler	mOspiMsgHandler;
+    private Context         	mParentContext;
+    private List<ListItem>  	list;
+    private LayoutInflater  	layoutInflater;
     
     /**
      * CustomListAdapter Class Constructor
      * @param mParentContext
      */
-    CustomListAdapter(Context context) 
+    CustomListAdapter(Context context, OspiMessageHandler msgHand ) 
     {
         this.mParentContext = context;
+        this.mOspiMsgHandler = msgHand;
+        
+        if (msgHand == null )
+        	Log.d(LOGTAG, "CLA mOspiMsgHandler is NULL");	
+        else
+        	Log.d(LOGTAG, "CLA mOspiMsgHandler is NOT NULL");	
     }
     
     public void setList (List<ListItem> list) 
@@ -206,9 +214,13 @@ In other words this method returns how many different layouts we have in our Lis
             		if ( DEBUG_EVENT_BUS )
             			Log.d(LOGTAG, "Posting OFF to EventBus");
             		
-    				EventBus.getDefault().post(new CircuitOnOffEvent(
-    						CircuitOnOffEvent.CIRCUIT_OFF, 
-    						mH.position+1));
+            		
+    				//SLM 0529 EventBus.getDefault().post(new CircuitOnOffMessage(
+            		mOspiMsgHandler.OspiPostCircuitOnOffMessage(
+    						CircuitOnOffMessage.CIRCUIT_OFF, 
+    						mH.position+1);
+    						
+            		
             		
             		list.get(mH.position).setToggleBtnState(0);
             		list.get(mH.position).setStopTime(System.currentTimeMillis());
@@ -301,9 +313,12 @@ In other words this method returns how many different layouts we have in our Lis
         				//SLMEB
                 		if ( DEBUG_EVENT_BUS )
                 			Log.d(LOGTAG, "Posting ON to EventBus");
-        				EventBus.getDefault().post(new CircuitOnOffEvent(
-        						CircuitOnOffEvent.CIRCUIT_ON, 
-        						mH.position+1));
+                		
+                		
+        				//SLM 0529 EventBus.getDefault().post(new CircuitOnOffMessage(
+                		mOspiMsgHandler.OspiPostCircuitOnOffMessage(
+        						CircuitOnOffMessage.CIRCUIT_ON, 
+        						mH.position+1);
         					
                 	}
                 	else
@@ -331,9 +346,11 @@ In other words this method returns how many different layouts we have in our Lis
                 		if ( DEBUG_EVENT_BUS )
                 			Log.d(LOGTAG, "Posting OFF to EventBus");
                 		
-                		EventBus.getDefault().post(new CircuitOnOffEvent(
-                				CircuitOnOffEvent.CIRCUIT_OFF, 
-                				mH.position+1));
+                		
+                		//SLM0529 EventBus.getDefault().post(new CircuitOnOffMessage(
+                		mOspiMsgHandler.OspiPostCircuitOnOffMessage(
+                				CircuitOnOffMessage.CIRCUIT_OFF, 
+                				mH.position+1);
                 	}
                 	
                 	// Update toggle button state & 
@@ -582,49 +599,7 @@ In other words this method returns how many different layouts we have in our Lis
 	    STimeTextView 	cirDurationSTTV;
 	    long			cirDurationMs;	// Not sure correct per above comment
 	    
-
-        
-        
- /*       
-	    long GetDurationMs()
-	    {
-	    	// TMP
-	    	return 0;
-//SLM2	    	return listItem.getDisplayDuration();
-	    }
-	 
-	    // As a side effect, this method also sets the ListItem's 
-	    // durationDisp value
-	    void SetDurationMs( int min, int sec )
-	    {
-	    	cirDurationMs = min*60*1000 + sec*1000;
-//SLm2	    	listItem.setDisplayDuration(cirDurationMs);
-	    	
-//SLM2	    	Log.d(LOGTAG_POS, "$$$ In ViewHolder.SetDurationMs() listItem = "+listItem.toStringAll());
-	    	
-	    }
-	    
-	    int GetDDurationMin()
-	    {
-	    	//int minutes = (int)(listItem.displayDuration / 1000 / 60);
-	    	//Log.d( LOGTAG, "In GetDDurationMin() minutes = "+minutes);
-//SLM2	    	return listItem.GetDDurationMin();
-	    	//TMP
-	    	return 0;
-	    
-	    }
-	    int GetDDurationSec()
-	    {
-	    	//int seconds = (int)((displayDuration / 1000) % 60);
-	    	//Log.d( LOGTAG, "In GetDDurationSec() seconds = "+seconds);
-//SLM2	    	return listItem.GetDDurationSec();
-	    	// TMP
-	    	return 0;
-	    }
-*/	    
-	    
 	}
-
 } 
 
 

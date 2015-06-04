@@ -1,7 +1,10 @@
 package com.slm_ospiui;
 
 
-import de.greenrobot.event.EventBus;
+import com.slm.ospiui.model.OspiMessageHandler;
+
+
+//import de.greenrobot.event.EventBus;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.os.Bundle;
@@ -13,10 +16,31 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+/**
+ * @author Susan L Marosek
+ * @version 0.1
+ * @ScheduleActivity - Currently displays a crude screen layout to define a 
+ * sprinkler schedule. 
+ */
+
+/*
+ * Modification History:
+ * 	
+ * 	03/23/15 Created. 
+ *	04/15/15 Added Life cycle methods which added EventBus register & 
+ *				unregister calls. 
+ *	04/16/15 Added handling for enabled and program id fields.
+ *	05/26/15 Modified to use new OspiMessageHandler rather than implement 
+ *				SendMessage and EventBus onEvent() in each Activity 
+ *
+ */
+
 public class ScheduleActivity extends Activity implements OspiResultsListener
 {
 	private final String LOGTAG = ScheduleActivity.class.getSimpleName();
     private static final boolean DEBUG = true;
+    
+    private OspiMessageHandler mCPMsgHandler;
 	
     // EVENTUALLY PUT THESE IN AN ARRAY
     CheckBox mMon;
@@ -37,6 +61,8 @@ public class ScheduleActivity extends Activity implements OspiResultsListener
     CheckBox mC7;
     CheckBox mC8;
     
+    CheckBox mEnabledCB;
+    EditText mPidET;
 	Button mSetStartTimeBtn;
 	Button mSubmitBtn;
 	STimeTextView mStartTimeSTTV;
@@ -48,10 +74,15 @@ public class ScheduleActivity extends Activity implements OspiResultsListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.schedule_setup);
         
+        
+        //mCPMsgHandler = new OspiMessageHandler( this );
+        
         // Define widgets
         mSetStartTimeBtn = (Button) findViewById( R.id.set_starttime_button);
         mSubmitBtn = (Button) findViewById( R.id.submit_button);
         mStartTimeSTTV = (STimeTextView) findViewById( R.id.starttime_sttv);
+        mEnabledCB = (CheckBox) findViewById( R.id.enabled_cb);
+        mPidET = (EditText) findViewById( R.id.prog_id_value_et);
         
         // Days of Week Checkboxes
         mMon = (CheckBox) findViewById( R.id.mon_cb);
@@ -156,6 +187,12 @@ public class ScheduleActivity extends Activity implements OspiResultsListener
  				EditText durationET = (EditText) findViewById( R.id.duration_value_et);
  				int durationToSend = Integer.parseInt(durationET.getText().toString());
  				
+ 				// Enabled
+ 				int enabled = mEnabledCB.isChecked() ? 1 : 0;
+ 				
+ 				// Program ID
+ 				int pid = Integer.parseInt(mPidET.getText().toString());
+ 				
  				// Circuits 
  				// circuits NEED TO BE CHANGED TO AN ARRAY, BUT WORKS FOR NOW
  				int circuitsToRun = 0;
@@ -202,20 +239,18 @@ public class ScheduleActivity extends Activity implements OspiResultsListener
  				}
  				Log.d(LOGTAG,  "circuitsToRun to send = "+circuitsToRun );
  					
- 				// Posts event so ScheduleActivity's onEvent() is called
-                // which in turn calls SendMessage() to OpenSprinkler Web App
-                // by starting OspiGetResultsAsyncTask.	
         		//SLMEB
                 if ( DEBUG )
-        			Log.d(LOGTAG, "Posting ChangeProgramEvent to EventBus");
-				EventBus.getDefault().post(new ChangeProgramEvent(
-					daysToRun, starttime_hr, starttime_min, 
-					durationToSend, circuitsToRun));
+        			Log.d(LOGTAG, "Posting ChangeProgramMessage to EventBus");
+                //SLM528 Have moved EventBus to OspiMessageHandler. MUST ensure to 
+                // unregister when Activity is Stopped.
+                // Post ChangeProgramMessage to EventBus where it will be sent
+                // to Open Sprinkler Web App
+                mCPMsgHandler.OspiPostChangeProgramMessage(enabled, pid,
+    					daysToRun, starttime_hr, starttime_min, 
+    					durationToSend, circuitsToRun);
  			}
  		});
-        
-        
-        
         
         
         mStartTimeSTTV.addTimerSetListener(new TimerSetListener ()
@@ -234,30 +269,9 @@ public class ScheduleActivity extends Activity implements OspiResultsListener
         });
 	}
 	
-	
-	// SAME as SendMessage in ManualModeActivity - Need to consolidate the 2 methods
-	public void SendMessage( String message )
-	{
-		Log.d(LOGTAG, "message = "+message);
-    	
-    	// call AsynTask to perform network operation on separate thread
-		//WAS new OspiGetResultsAsyncTask(activityContext).execute(command);
-		new OspiGetResultsAsyncTask(this,
-				OspiGetResultsAsyncTask.OSPI_EXEC).execute(message);
-	}
 	  
-	// SAME as onEvent in ManualModeActivity, except for event type - 
-	// NEED to consolidate the 2 methods
-	// This method will be called when a ChangeProgramEvent is posted
-    public void onEvent( ChangeProgramEvent event )
-    {
-        Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show();
-        SendMessage( event.message );
-    }
-
-
 	@Override
-	public void onResults(String result) 
+	public void onOspiResults(String result) 
 	{
 		// TODO Auto-generated method stub
 		Toast.makeText(this, "ScheduleActivity onResult() = "+result, Toast.LENGTH_SHORT).show();
@@ -274,12 +288,14 @@ public class ScheduleActivity extends Activity implements OspiResultsListener
         //  Called after onCreate() OR onRestart()
         //  Called after onStop() but process has not been killed.
         super.onStart();
-        
+        Log.d(LOGTAG, "onStart");
         //SLMEB
-        EventBus.getDefault().register(this);
-        
+        // Register as a subscriber
+        //EventBus.getDefault().register(this);
+        mCPMsgHandler = new OspiMessageHandler( this, OspiGetResultsAsyncTask.OSPI_EXEC );   
     }
 
+    
     @Override
     public void onRestart() 
     {
@@ -292,14 +308,18 @@ public class ScheduleActivity extends Activity implements OspiResultsListener
     @Override
     protected void onResume() 
     {
-        //  Called after onStart() as Activity comes to foreground.
+        // Called after onStart() as Activity comes to foreground.
+    	// Used to initialize fields, register listeners, bind to services, etc
         if (DEBUG) Log.d (LOGTAG, "onResume");
         super.onResume();
     }
     
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        //  Called before an Activity is killed.
+        //  Called before an Activity is killed. 
+    	// NOTE: this method is not called if the user presses the back button. 
+    	// Don't use this approach to save data which needs to get persisted.
+
     	if ( DEBUG )
     		Log.d (LOGTAG, "onSaveInstanceState()");
         super.onSaveInstanceState(outState);
@@ -308,7 +328,10 @@ public class ScheduleActivity extends Activity implements OspiResultsListener
     @Override
     public void onPause() 
     {
-        //  Called when Activity is placed in background
+        // Called when Activity is placed in background
+    	// Used to release resources or save application data. For example you 
+    	// unregister listeners, intent receivers, unbind from services or 
+    	// remove system service listeners.
         if (DEBUG) Log.d (LOGTAG, "onPause"); 
         super.onPause();
     }
@@ -316,11 +339,15 @@ public class ScheduleActivity extends Activity implements OspiResultsListener
     @Override
     protected void onStop() 
     {
-    	//  The Activity is no longer visible
+    	// The Activity is no longer visible
+    	// Time or CPU intensive shut-down operations, such as writing 
+    	// information to a database should be down in the onStop() method.
+    	// Guaranteed to be called as of API 11
         if (DEBUG) Log.d (LOGTAG, "onStop");
         
         //SLMEB
-        EventBus.getDefault().unregister(this);
+        Log.d(LOGTAG, "unregistering mCPMsgHandler (& this from EventBus)");
+        mCPMsgHandler.Unregister();
         
         super.onStop();
     }
@@ -328,7 +355,8 @@ public class ScheduleActivity extends Activity implements OspiResultsListener
     @Override
     public void onDestroy() 
     {
-    	//  The Activity is finishing or being destroyed by the system
+    	//  The Activity is finishing or being destroyed by the system.
+    	// Not guaranteed to be called.
         if (DEBUG) Log.d (LOGTAG, "onDestroy");
         super.onDestroy();
     }

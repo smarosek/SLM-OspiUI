@@ -1,10 +1,25 @@
 package com.slm_ospiui;
 
+/**
+ * @author Susan L Marosek
+ * @version 0.1
+ * @CCircuitOnOffMessage - 
+ * 
+ */
+
+/*
+ * Modification History:
+ * 	
+ * 	03/31/15 Created
+ *	06/02/15 Changed name from CircuitOnOffEvent to CircuitOnOffMessage.
+ *
+ */
 import android.util.Log;
 
-public class CircuitOnOffEvent {
+public class CircuitOnOffMessage extends OspiMessage
+{
 
-	private static final String LOGTAG = "CircuitOnOffEvent";
+	private static final String LOGTAG = "CircuitOnOffMessage";
 	
 	public static final int CIRCUIT_OFF = 0;
 	public static final int CIRCUIT_ON = 1;
@@ -28,20 +43,11 @@ public class CircuitOnOffEvent {
 	public static final int SET_CIRCUIT_ON_OFF_STATUS = 300;
 	// Turn on circuit => http://x.x.x.x/sn1=3 (turn on the third station)
 	
-	//public final String message;
-	public String message;
-	
 	public int mStatus;
 	public int mCircuitNum;
-	public int mMsgType;
-/*
-    public CircuitOnOffEvent(String message) 
-    {
-        this.message = message;
-    }
-  */  
-    //public CircuitOnOffEvent( int msgType, int circuitNum, int status )
-    public CircuitOnOffEvent( int status, int circuitNum )
+	 
+    //public CircuitOnOffMessage( int msgType, int circuitNum, int status )
+    public CircuitOnOffMessage( int status, int circuitNum )
     {
         this.mStatus = status;
         this.mCircuitNum = circuitNum;
@@ -51,41 +57,45 @@ public class CircuitOnOffEvent {
         switch ( circuitNum )
         {
 	        case 1:
-	        	this.mMsgType = SET_MANUAL_MODE;
+	        	this.mMessageType = SET_MANUAL_MODE;
 	        	break;
 //	        case 2:
-//	        	this.mMsgType = SET_MASTER_CIRCUIT;
+//	        	this.mMessageType = SET_MASTER_CIRCUIT;
 //	        	break;
 //	        case 3:
 //	        case 4:
 	        default:
-	        	Log.d(LOGTAG, "In CircuitOnOffEvent Setting MsgType");
-	        	this.mMsgType = SET_CIRCUIT_ON_OFF_STATUS;
+	        	Log.d(LOGTAG, "In CircuitOnOffMessage Setting MsgType");
+	        	this.mMessageType = SET_CIRCUIT_ON_OFF_STATUS;
 	        	break;
         }
         
-        // Build command message based on mMsgType
-        switch ( mMsgType )
+        // Build command message based on mMessageType
+        switch ( mMessageType )
         {
 	        case SET_MANUAL_MODE:
-	        	message = URL+CONTROLLER_VALUES+PASSWD+MANUAL_MODE+mStatus;
-	        	Log.d( LOGTAG, message );
+	        	mMessage = URL+CONTROLLER_VALUES+PASSWD+MANUAL_MODE+mStatus;
+	        	Log.d( LOGTAG, mMessage );
 	        	break;
 	        case SET_MASTER_CIRCUIT:
 	        	if ( mStatus == 1 )
 	        		mStatus++;
-	        	message = URL+STATION_NUMBER+"1"+"="+mStatus;
+	        	mMessage = URL+STATION_NUMBER+"1"+"="+mStatus;
 	        	break;
 	        case SET_CIRCUIT_ON_OFF_STATUS:
 	        default:
 	        	// This works   
-	        	message = URL+STATION_NUMBER+mCircuitNum+"="+mStatus+"&t=0";
+	        	mMessage = URL+STATION_NUMBER+mCircuitNum+"="+mStatus+"&t=0";
 	        	//if ( mStatus == 1 )
 	        	//	mStatus++;
 	        	//message = URL+STATION_NUMBER+mCircuitNum+"="+mStatus;
-	        	Log.d( LOGTAG, "CircuitOnOffEvent message= ** "+message+" **" );
+	        	Log.d( LOGTAG, "CircuitOnOffMessage message= ** "+mMessage+" **" );
 	        	break;
         }
        
+    }
+    public void onOspiEvent()
+    {
+    	
     }
 }

@@ -24,6 +24,7 @@
     <dimen name="button_padding_large">10dp</dimen>
     <dimen name="textview_padding_default">3dp</dimen>
     <dimen name="spacing_padding_default">5dp</dimen>
+    <dimen name="spacing_padding_extra_extra">50dp</dimen>
     
     <!-- Inter-circuit separating values -->
     <dimen name="label_button_vertical_margin">5dp</dimen>

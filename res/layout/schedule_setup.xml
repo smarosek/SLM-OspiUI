@@ -10,13 +10,51 @@
 
     <!-- NOTE: Can specifiy android:padding="10dp" -->
 
+	   	<!-- Misc settings -->
+	    <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="horizontal"
+	        android:paddingTop="@dimen/layout_margin_medium"
+	        android:paddingStart="15dp"
+	        android:paddingEnd="15dp"
+	        >
+	        
+	       	<CheckBox android:id="@+id/enabled_cb"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/str_enabled" 
+	    		android:paddingStart="@dimen/layout_margin_large"
+		        />
+        
+	    	<TextView
+	            android:id="@+id/prog_id_label_tv"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:paddingLeft="@dimen/spacing_padding_extra_extra"
+	            android:text="@string/str_program_id_colon"
+	            android:labelFor="@+id/prog_id_value_et"
+	            />
+	             
+	        <EditText
+	            android:id="@+id/prog_id_value_et"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="right"
+	            android:hint="@string/str_hint_num"
+	            android:inputType="numberSigned|numberDecimal"
+	            android:minEms="2"
+	            android:paddingTop="0dp" />
+	        
+		</LinearLayout>
+
     <!-- Days of Week -->
 	<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingTop="@dimen/layout_margin_large"
-        android:paddingBottom="@dimen/layout_margin_large"
+        android:paddingTop="@dimen/layout_margin_medium"
+        android:paddingBottom="@dimen/layout_margin_medium"
 		android:gravity="center_horizontal"
         >
         
@@ -103,7 +141,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/layout_margin_large"
+        android:paddingBottom="@dimen/layout_margin_medium"
         android:paddingStart="@dimen/layout_margin_large"
         android:paddingEnd="@dimen/layout_margin_large"
          >
@@ -172,8 +210,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingTop="@dimen/layout_margin_large"
-        android:paddingBottom="@dimen/layout_margin_large"
+        android:paddingTop="@dimen/layout_margin_medium"
+        android:paddingBottom="@dimen/layout_margin_medium"
         android:paddingStart="@dimen/layout_margin_large"
         android:paddingEnd="@dimen/layout_margin_large"
         >
@@ -238,7 +276,7 @@
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:orientation="horizontal"
-	        android:paddingBottom="@dimen/layout_margin_large"
+	        android:paddingBottom="@dimen/layout_margin_medium"
 	        android:paddingStart="15dp"
 	        android:paddingEnd="15dp"
 	        >
@@ -257,6 +295,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 				android:layout_gravity="right"
+				android:inputType="numberDecimal"
 	          	android:paddingTop="0dp" 
 	          	android:minEms="3"                
                 android:hint="@string/str_hint_num" />
@@ -266,9 +305,9 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_gravity="center"
-	            android:text="@string/str_mins"
-	            
+	            android:text="@string/str_mins"    
 	            />
+	        
 		</LinearLayout>
 		
 	    <Button
@@ -278,56 +317,12 @@
 			android:text="@string/str_submit"
 			android:paddingRight="5dp"
 			android:paddingLeft="5dp"
-			android:paddingTop="5dp"
-			android:paddingBottom="5dp"
+			android:paddingTop="3dp"
+			android:paddingBottom="3dp"
 		    	/>
          
 	</LinearLayout>
-	
-	   	<!-- Row 1 -->
-<!--    	
-	    <LinearLayout
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:orientation="horizontal"
-	        android:paddingBottom="@dimen/label_button_vertical_margin"
-	        android:paddingLeft="5dp"
-	        android:paddingRight="5dp" >
-	        
-	        <TextView
-	            android:id="@+id/circuit1_num_sched_tv"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_gravity="center"
-	            android:hint="@string/str_hint_c1"
-	            android:labelFor="@+id/duration1_sched_et"
-	            android:minEms="9"
-	            />
-	        
-	        
-	        <EditText
-	            android:id="@+id/duraation1_sched_et"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-				android:layout_gravity="right"
-	          	android:paddingTop="0dp" 
-	          	android:minEms="3"                
-                android:hint="@string/str_hint_num" />
-	      
-	        
-	        <TextView
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_gravity="center"
-	            android:hint="@string/str_mins"
-	            />
-	        
-	
-	        
-		</LinearLayout>
- -->			
-
-        
+		
 </LinearLayout>	    
 
         

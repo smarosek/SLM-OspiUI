@@ -9,9 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.slm.ospiui.model.Circuit;
+import com.slm.ospiui.model.OspiMessageHandler;
 
-
-import de.greenrobot.event.EventBus;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -25,8 +24,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+
+/**
+ * @author Susan L Marosek
+ * @version 0.1
+ * ManualModeActivity - Currently displays a crude screen layout to provide
+ * 						manual operation of individual sprinkler circuits. 
+ */
+
+/*
+ * Modification History:
+ * 	
+ * 	02/25/15 Created. 
+ * 	05/28/15 Modified to use new OspiMessageHandler rather than implement 
+ *				SendMessage and EventBus onEvent() in each Activity.
+ */
 public class ManualModeActivity extends Activity implements OspiResultsListener
 {
     private static final String LOGTAG = "ManualModeActivity";
@@ -62,7 +75,7 @@ public class ManualModeActivity extends Activity implements OspiResultsListener
     
     private Circuit		maCircuits[];
     
-    
+    private OspiMessageHandler mOspiMsgHandler;
     
     ProgressDialog pD;
  
@@ -87,8 +100,14 @@ public class ManualModeActivity extends Activity implements OspiResultsListener
         mCommandET = (EditText) this.findViewById( R.id.command_et);
         mResultTV = (TextView) this.findViewById(R.id.result_tv);
         
-        mGETBtn = (Button)this.findViewById( R.id.get_button); 
+        Log.d(LOGTAG, "Creating OspiMessageHandler");
+        // SLM0601 Moved from onStart BUT NOT SURE I SHOULD HAVE
+        // Register as a subscriber
+        mOspiMsgHandler = new OspiMessageHandler( 
+        		activityContext, OspiGetResultsAsyncTask.OSPI_GET );
         
+        
+        mGETBtn = (Button)this.findViewById( R.id.get_button); 
         // GET FORECAST Button handler
         mGETBtn.setOnClickListener(new Button.OnClickListener() 
         {                	
@@ -96,17 +115,16 @@ public class ManualModeActivity extends Activity implements OspiResultsListener
             public void onClick (final View v) 
             {	
             	Log.d(LOGTAG, "GET button clicked");
-            	String command = mCommandET.getText().toString();
+            	String command = URL+mCommandET.getText().toString();
             	// Send command that is in mCommandET text field to the 
             	// Open Sprinkler Web App
-            	SendCommand( command );
+            	mOspiMsgHandler.SendSimpleGETCommand(command);
         	}
         });
         
         
-        
         // ListView & CustomListAdapter
-        listAdapter = new CustomListAdapter(this);
+        listAdapter = new CustomListAdapter( this, mOspiMsgHandler );
         ListView listView = (ListView) this.findViewById( R.id.list_view);
         listView.setAdapter(listAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() 
@@ -135,7 +153,7 @@ public class ManualModeActivity extends Activity implements OspiResultsListener
         
         // Setup / Build list of Circuits for Manual screen
         BuildCircuitList();
-//SLM1-12        new GetDataTask().execute ();
+//SLM1-12       BuildCircuitListFromFile();
 	}
 	
 
@@ -149,8 +167,7 @@ public class ManualModeActivity extends Activity implements OspiResultsListener
 		BuildGeneralCircuitList();
 		
 		listAdapter.setList(list);
-		listAdapter.notifyDataSetChanged();
-		
+		listAdapter.notifyDataSetChanged();	
 	}
 	
 
@@ -204,41 +221,7 @@ public class ManualModeActivity extends Activity implements OspiResultsListener
 		new GetDataTask().execute ();
 	}
 	
-	
- 
-	
-	/**
-	 * SendCommand - Send command to the Open Sprinkler Web App using an
-	 * HttpAsynTask background task.
-	 * 
-	 * @param command - the command text to be sent to Open Sprinkler
-	 */
-	public void SendCommand( String command )
-	{
-		mCommand = command;
-		
-		Log.d(LOGTAG, "URL = "+URL+"  command = "+command);
-    	
-    	// call AsynTask to perform network operation on separate thread
-		// new OspiGetResultsAsyncTask(this).execute
-		//    ("http://192.168.0.41:8080"+command);
-		new OspiGetResultsAsyncTask( activityContext, 
-				OspiGetResultsAsyncTask.OSPI_GET ).execute(URL+command);
-	}
-	
-	public void SendMessage( String command )
-	{
-		mCommand = command;
-		
-		Log.d(LOGTAG, "command = "+command);
-    	
-    	// call AsynTask to perform network operation on separate thread
-		// new OspiGetResultsAsyncTask(this).execute
-		//    ("http://192.168.0.41:8080"+command);
-		new OspiGetResultsAsyncTask( activityContext,
-				OspiGetResultsAsyncTask.OSPI_GET ).execute(command);
-	}
-	
+
 	
 	public void SetCircuitStatus( String command )
 	{
@@ -246,18 +229,14 @@ public class ManualModeActivity extends Activity implements OspiResultsListener
 	}
 	
 
-	// This method will be called when a CircuitOnOffEvent is posted
-    public void onEvent(CircuitOnOffEvent event)
-    {
-        Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show();
-    	//String message = "Got circuit "+event.mCircuitNum+" to be turned "+(event.mStatus == 0 ? "OFF":"ON");
-    	//Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-        SendMessage( event.message );
-    }
 
-
+	/* 
+	 * (non-Javadoc)
+	 * @see com.slm_ospiui.OspiResultsListener#onOspiResults(java.lang.String)
+	 */
 	@Override
-	public void onResults(String result) {
+	public void onOspiResults(String result) 
+	{
 		 mResult = result;
          
          if ( mCommand.equals( GET_ALL_CIRCUITS ))
@@ -292,10 +271,13 @@ public class ManualModeActivity extends Activity implements OspiResultsListener
         super.onStart();
         
         //SLMEB
-        EventBus.getDefault().register(this);
+        /*SLM0601  Moving to onCreate BUT NOT SURE I SHOULD
+        Log.d(LOGTAG, "Creating mOspiMsg");
+        mOspiMsg = new OspiMessageHandler( this, OspiGetResultsAsyncTask.OSPI_GET );
+        */
         
-        // Refresh the circuit states.
-        SendCommand("/sn0");
+        // Get the circuit states.
+        mOspiMsgHandler.SendSimpleGETCommand(URL+"/sn0");
     }
 
     @Override
@@ -338,7 +320,8 @@ public class ManualModeActivity extends Activity implements OspiResultsListener
         if (DEBUG) Log.d (LOGTAG, "onStop");
         
         //SLMEB
-        EventBus.getDefault().unregister(this);
+        Log.d(LOGTAG, "unregistering mOspiMsgHandler (& this from EventBus)");
+        mOspiMsgHandler.Unregister();
         
         super.onStop();
     }
@@ -453,6 +436,5 @@ public class ManualModeActivity extends Activity implements OspiResultsListener
     	    pD.dismiss();
 		}
 	}
-	
 	
 }

@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Overall layout -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="@dimen/layout_margin_small"
+    android:layout_marginStart="@dimen/layout_margin_medium"
+    android:layout_marginEnd="@dimen/layout_margin_medium"
+    android:baselineAligned="false"
+    android:descendantFocusability="blocksDescendants"
+    android:weightSum="6" 
+    android:orientation="horizontal" >
+    
+
+    <!-- Main program data -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="4"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/label_button_vertical_margin"
+        android:paddingLeft="@dimen/layout_margin_default"
+        android:paddingRight="@dimen/layout_margin_default"
+        android:weightSum="6" >
+
+       	<!-- Program # data -->
+        <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="horizontal"
+	      	>
+      	  	<TextView
+	            
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="@string/str_program_colon"
+	            android:textSize="@dimen/small_data_text_sz" 
+	            />
+
+           	<TextView
+	          	android:id="@+id/program_num_tv"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:hint="@string/str_hint_num"
+	            android:paddingStart="10dp"
+	            android:paddingEnd="5dp"
+	            android:textSize="@dimen/small_data_text_sz" 
+	            />
+            
+		</LinearLayout>
+		
+       	<!-- Circuits list -->
+        <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="horizontal"
+	      	>
+      	  	<TextView
+	            
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="@string/str_circuits_colon"
+	            android:textSize="@dimen/small_data_text_sz" 
+	            />
+
+           	<TextView
+	          	android:id="@+id/circuits_list_tv"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:hint="@string/str_hint_dashes"
+	            android:paddingStart="10dp"
+	            android:paddingEnd="5dp"
+	            android:textSize="@dimen/small_data_text_sz" 
+	            />
+            
+		</LinearLayout>
+		
+        
+        <!-- Days list -->
+        <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="horizontal"
+	      	>
+      	  	<TextView
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="@string/str_days_colon"
+	            android:textSize="@dimen/small_data_text_sz" 
+	            />
+
+           	<TextView
+	          	android:id="@+id/days_list_tv"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:hint="@string/str_hint_dashes"
+	            android:paddingStart="10dp"
+	            android:paddingEnd="5dp"
+	            android:textSize="@dimen/small_data_text_sz" 
+	            />
+           	
+           	<TextView
+           	    android:layout_width="wrap_content"
+           	    android:layout_height="wrap_content"
+           	    android:layout_gravity="end"
+           	    android:gravity="fill_horizontal|end"
+           	    android:text="@string/str_start_time_colon"
+           	    android:textSize="@dimen/small_data_text_sz" />
+
+           	<TextView
+	          	android:id="@+id/starttime_tv"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:hint="@string/str_hint_mm_ss"
+	            android:gravity="right"
+	            android:layout_gravity="right"
+	            android:paddingStart="10dp"
+	            android:paddingEnd="5dp"
+	            android:textSize="@dimen/small_data_text_sz" 
+	            />
+            
+		</LinearLayout>
+        
+        
+        <!-- Duration, Repeat-->
+        <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="horizontal"
+	      	>
+      	  	<TextView
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="@string/str_duration_colon"
+	            android:textSize="@dimen/small_data_text_sz" 
+	            />
+
+           	<TextView
+	          	android:id="@+id/duration_tv"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:hint="@string/str_hint_num"
+	            android:paddingStart="10dp"
+	            android:paddingEnd="5dp"
+	            android:textSize="@dimen/small_data_text_sz" 
+	            />
+           	
+           	<TextView
+           	    android:layout_width="wrap_content"
+           	    android:layout_height="wrap_content"
+           	    android:layout_gravity="end"
+           	    android:gravity="fill_horizontal|end"
+           	    android:text="@string/str_repeat_colon"
+           	    android:textSize="@dimen/small_data_text_sz" />
+
+           	<TextView
+	          	android:id="@+id/repeat_tv"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:hint="@string/str_hint_num"
+	            android:gravity="right"
+	            android:layout_gravity="right"
+	            android:paddingStart="10dp"
+	            android:paddingEnd="5dp"
+	            android:textSize="@dimen/small_data_text_sz" 
+	            />
+            
+		</LinearLayout>
+	</LinearLayout>
+        
+        
+
+	
+    <!-- Delete button & status (enabled/disabled/active -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/layout_margin_default"
+        android:paddingBottom="@dimen/layout_margin_default"
+        android:paddingLeft="@dimen/layout_margin_default"
+        android:paddingRight="@dimen/layout_margin_default"
+        android:weightSum="2" >
+
+    	<Button
+            android:id="@+id/delete_button"
+            style="@style/SLMButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="20dp"
+            android:minWidth="36dp"
+            android:paddingTop="@dimen/button_padding_default"
+            android:paddingBottom="@dimen/button_padding_default"
+           	android:layout_gravity="right"
+            android:text="@string/str_delete"
+            android:textSize="@dimen/label_text_sz" 
+            />
+    	<!--  android:paddingLeft="@dimen/button_padding_default"
+            android:paddingRight="@dimen/button_padding_default"
+             -->
+             
+    	<!-- Just for spacing -->
+    	<TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/str_empty"
+            android:textSize="@dimen/small_data_text_sz" 
+            />
+    	
+    	<TextView
+          	android:id="@+id/prog_status_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:paddingBottom="0dp"
+            android:hint="@string/str_hint_disabled"
+            android:textSize="@dimen/small_data_text_sz" 
+            />
+    	<!-- android:gravity="bottom"
+    	s -->
+        
+	</LinearLayout>
+
+</LinearLayout>
