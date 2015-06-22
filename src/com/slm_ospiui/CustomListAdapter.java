@@ -216,9 +216,7 @@ In other words this method returns how many different layouts we have in our Lis
             		
             		
     				//SLM 0529 EventBus.getDefault().post(new CircuitOnOffMessage(
-            		mOspiMsgHandler.OspiPostCircuitOnOffMessage(
-    						CircuitOnOffMessage.CIRCUIT_OFF, 
-    						mH.position+1);
+            		Send ( CircuitOnOffMessage.CIRCUIT_OFF, mH.position+1, 0 ); //SLM0618
     						
             		
             		
@@ -306,20 +304,14 @@ In other words this method returns how many different layouts we have in our Lis
                 		mH.cirChronoSTV.SetStartTime(0);
                 		mH.cirChronoSTV.PostTimerDelayed(0);
                         
-                		// Posts message/event so ManualModeActivity's onEvent() is 
-                		// called which in turn calls SendMessage() to OpenSprinkler Web App
-                		// by starting OspiGetResultsAsyncTask.
-                		// TMP SLM 0305 - yes correct position
-        				//SLMEB
-                		if ( DEBUG_EVENT_BUS )
-                			Log.d(LOGTAG, "Posting ON to EventBus");
-                		
-                		
-        				//SLM 0529 EventBus.getDefault().post(new CircuitOnOffMessage(
-                		mOspiMsgHandler.OspiPostCircuitOnOffMessage(
-        						CircuitOnOffMessage.CIRCUIT_ON, 
-        						mH.position+1);
-        					
+                		// Posts message/event so OspiMessageHandler's onEvent()  
+                		// is called which in turn sends appropriate message to 
+                		// OpenSprinkler Web App by starting 
+                		// OspiGetResultsAsyncTask.
+        				
+                		Log.d( LOGTAG_POS, "DURATION = "+ mH.cirDurationSTTV.GetTimeMs() );
+        				//SLM 0529 WAS EventBus.getDefault().post(new CircuitOnOffMessage(
+                		Send ( CircuitOnOffMessage.CIRCUIT_ON, mH.position+1, mH.cirDurationSTTV.GetTimeMs() );	
                 	}
                 	else
                 	{	// Button is unchecked, stop chronometer and save time to DB
@@ -337,20 +329,17 @@ In other words this method returns how many different layouts we have in our Lis
                 		// Button is unchecked, stop timer (and save time to DB??)
                 		mH.cirChronoSTV.RemoveTimerCallbacks();
                 		
-                		
-                	
-                		// Posts message/event so ManualModeActivity's onEvent() is 
-                		// called which in turn calls SendMessage() to OpenSprinkler Web App
-                		// by starting OspiGetResultsAsyncTask.
+                		// Posts message/event so OspiMessageHandler onEvent() is 
+                		// is called which in turn sends appropriate message to 
+                		// OpenSprinkler Web App by starting 
+                		// OspiGetResultsAsyncTask.
                 		//SLMEB
                 		if ( DEBUG_EVENT_BUS )
-                			Log.d(LOGTAG, "Posting OFF to EventBus");
+                			Log.d(LOGTAG, "Send CIRCUIT_OFF ");
                 		
                 		
-                		//SLM0529 EventBus.getDefault().post(new CircuitOnOffMessage(
-                		mOspiMsgHandler.OspiPostCircuitOnOffMessage(
-                				CircuitOnOffMessage.CIRCUIT_OFF, 
-                				mH.position+1);
+                		//SLM0529 WAS EventBus.getDefault().post(new CircuitOnOffMessage(
+                		Send ( CircuitOnOffMessage.CIRCUIT_OFF, mH.position+1, 0 ); //SLM0618
                 	}
                 	
                 	// Update toggle button state & 
@@ -415,6 +404,20 @@ In other words this method returns how many different layouts we have in our Lis
         return convertView;
     }
     
+    
+    /*********************/
+    
+    /**
+     * Send - send requested message while hiding some of the implementation.
+     * 
+     * @param msgType - Type of Ospi message to send
+     * @param circNum - the circuit number this message applies to
+     * @param time - duration, otherwise 0?
+     */
+    void Send( int msgType, int circNum, long timeMS )
+    {
+    	mOspiMsgHandler.OspiPostCircuitOnOffMessage( msgType, circNum, timeMS );
+    }
     
     
     /*********************/

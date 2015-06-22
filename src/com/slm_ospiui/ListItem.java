@@ -1,5 +1,7 @@
 package com.slm_ospiui;
 
+import java.io.Serializable;
+
 import android.util.Log;
 
 /**
@@ -15,10 +17,13 @@ import android.util.Log;
  * 				duration soon. Not sure that I'll use the displayDuration, may
  * 				only need it in ViewHolder to save the value of a timer that
  * 				is not currently running.
+ * 06/05/15 Made class Serializable so that I can save the list of ListItems 
+ * 				in a saveInstanceState()	
  */
-public class ListItem 
+public class ListItem implements Serializable
 {
-	
+	private static final long serialVersionUID = -7086685765792911935L;
+
 	private static final String LOGTAG = "ListItem";
 	
 	String 	cirNum;

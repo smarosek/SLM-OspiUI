@@ -60,6 +60,14 @@ import de.greenrobot.event.EventBus;
  *   		Ex:http://x.x.x.x/co?pw=opendoor&npw=1234&cpw=1234 
  *   					(change password to 1234)
  *   
+ *   	9. 6/1/15 NEW FROM SLM: Get programs.json from the RPi [Keyword /pgi]
+ *   		/pgi: i is positive program index (starts from 1). pg0 = get all programs.
+ *   		Note: program/schedule format is same as that in #6 /cp command.
+ * 			Ex: http://x.x.x.x/pg0 (returns entire content of programs.json 
+ * 				on Raspberry Pi)
+ * 			Ex: http://x.x.x.x/pg1 (returns program 1's schedule info stored in
+ * 				 programs.json on Raspberry Pi)
+ *   
  * @author Susan Marosek
  *
  */
@@ -165,12 +173,15 @@ public class OspiMessageHandler
 	/**
 	 * This method is called to post a CircuitOnOffMessage to the EventBus.
 	 * 
-	 * @param status - CIRCUIT_OFF or CIRCUIT_ON (0/1)
+	 * @param status - on/off status: CIRCUIT_OFF or CIRCUIT_ON (0/1)
 	 * @param circuitNum - Indicates the circuit number to be turned off/on
+	 * @param timeMS - Indicates time in ms.
 	 */
-	public void OspiPostCircuitOnOffMessage( int status, int circuitNum )
+	public void OspiPostCircuitOnOffMessage( int status, int circuitNum, long timeMS )
 	{
-		EventBus.getDefault().post(new CircuitOnOffMessage( status, circuitNum ));
+		// OpenSprinkler Web App expects time in seconds so convert timeMS 
+		int time = (int)(timeMS/1000);
+		EventBus.getDefault().post(new CircuitOnOffMessage( status, circuitNum, time ));
 	}
 
 	

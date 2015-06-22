@@ -23,9 +23,14 @@ public class STimerView extends STimeTextView
 //	private static final long DEFAULT_TIMEOUT = 10000;
 	private boolean countDown = false;
 	private boolean isTimeOut = false;
+
+//SLM0610	
+	private boolean mVisible;
 	
 	private long mTimeOut = 0;  		//20000;	
 	private long mStartTime = 0;
+	private boolean mRunning;
+	
 	
     //runs without a timer by reposting this handler at the end of the runnable
     private Handler mTimerHandler = new Handler();
@@ -38,6 +43,9 @@ public class STimerView extends STimeTextView
 	    super(context, attrs);
 	    
 	    a = (Activity) this.getParent();
+	   
+	    Log.d(LOGTAG, "Constructor Setting mRunning to FALSE for "+this.getId());
+	    mRunning = false;
 
 	}
 	
@@ -100,7 +108,7 @@ public class STimerView extends STimeTextView
     public Handler GetTimerHandler()
     {
     	if ( DEBUG )
-    		Log.d( LOGTAG, "In GetTimerHandler");
+    		Log.d( LOGTAG, "In GetTimerHandler ");
     	return mTimerHandler;
     }
     
@@ -108,6 +116,11 @@ public class STimerView extends STimeTextView
     {
     	if ( DEBUG )
     		Log.d( LOGTAG, "In RemoveTimerCallbacks");
+    	
+    	Log.d(LOGTAG, "In RemoveTimerCallbacks SETTING mRunnning to FALSE for "+this.getId());
+//SLM0610
+    	mRunning = false;
+    	
     	mTimerHandler.removeCallbacks(timerRunnable);
     }
     
@@ -120,7 +133,11 @@ public class STimerView extends STimeTextView
     	// running. Don't want timer to get reset to 0
     	//
     	if ( mStartTime == 0 )
+    	{
+    		Log.d(LOGTAG, "In PostTimerDelayed SETTING mRunnning to TRUE for "+this.getId());
+    		mRunning = true;
     		mStartTime = System.currentTimeMillis();
+    	}
     	
     	mTimerHandler.postDelayed( timerRunnable, delay);
     }
@@ -178,4 +195,19 @@ public class STimerView extends STimeTextView
 	     }
   	}
 
+  	
+//SLM0610  	
+  	@Override
+    protected void onWindowVisibilityChanged(int visibility) 
+  	{
+        super .onWindowVisibilityChanged(visibility);
+        
+        Log.d( LOGTAG, "WOO HOO In onWindowVisibilityChanged mRunning = "+mRunning+ " for " + this.getId());
+        mVisible = visibility == VISIBLE;
+        // If the timer is running, post to fire timer
+        if ( mRunning )
+        	PostTimerDelayed(1000);
+        //updateRunning();
+    }
+  	
 }

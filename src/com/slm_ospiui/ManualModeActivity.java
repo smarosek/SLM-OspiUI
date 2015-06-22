@@ -1,21 +1,17 @@
 package com.slm_ospiui;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.slm.ospiui.model.Circuit;
+import com.slm.ospiui.model.CircuitList;
 import com.slm.ospiui.model.OspiMessageHandler;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.res.AssetManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -39,13 +35,24 @@ import android.widget.TextView;
  * 	02/25/15 Created. 
  * 	05/28/15 Modified to use new OspiMessageHandler rather than implement 
  *				SendMessage and EventBus onEvent() in each Activity.
+ *	06/11/15 Mods to incorporate new CircuitList class.
+ *	06/17/15 Added code to restore circuit data from new CircuitList singleton
+ *
  */
 public class ManualModeActivity extends Activity implements OspiResultsListener
 {
     private static final String LOGTAG = "ManualModeActivity";
-    private static final boolean DEBUG = true;
+    private static final String SAVEDIN = "SLMSavedInstance";
+    
+    // Use DEBUG to keep Log.d statements available but unused
+    private static final boolean DEBUG = false; 
+    // Use DEBUGLC to print Life Cycle related info
+    private static final boolean DEBUGLC = true;
+    // Use DEBUG1 to print ...
     private static final boolean DEBUG1 = true;
+    // Use DEBUG2 to print ...
     private static final boolean DEBUG2 = true;
+    
     
     private static final int MAX_NUM_CIRCUITS = 8;
     
@@ -73,7 +80,9 @@ public class ManualModeActivity extends Activity implements OspiResultsListener
     private String		mResult;
     private String 		mCommand = "";
     
-    private Circuit		maCircuits[];
+//SLM0615    private Circuit		maCircuits[];
+    
+    private CircuitList sCircuitList;
     
     private OspiMessageHandler mOspiMsgHandler;
     
@@ -85,8 +94,10 @@ public class ManualModeActivity extends Activity implements OspiResultsListener
     
     
 	@Override
-	protected void onCreate(Bundle savedInstanceState) 
+	protected void onCreate(final Bundle savedInstanceState) 
 	{
+		Log.d(SAVEDIN, "In onCreate");
+		
         //  Called when the activity is first created.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.manual_mode);
@@ -141,7 +152,7 @@ public class ManualModeActivity extends Activity implements OspiResultsListener
 
                 ListItem li = (ListItem)(listAdapter.getItem(position));
                 
-                if ( DEBUG2 )
+                if ( DEBUG )
                 {
                 	if ( li != null )
                 		Log.d(LOGTAG, "ListItem  "+li.toString());
@@ -151,76 +162,67 @@ public class ManualModeActivity extends Activity implements OspiResultsListener
             }
         });
         
-        // Setup / Build list of Circuits for Manual screen
-        BuildCircuitList();
+        
+        Log.d(SAVEDIN,  "Building Circuit List");
+        
+        if( savedInstanceState != null )
+        {
+        	Log.d(SAVEDIN,  "HERE1  savedInstanceState != null");
+        	list = (ArrayList<ListItem>)savedInstanceState.getSerializable("mmList");
+        	
+        	
+        	
+
+        }
+        // savedInstanceState == null, 
+        //		recreate sCircuitList and restore ListView items
+        else
+        {
+        	Log.d(SAVEDIN,  "HERE2 list == null");
+	        // Setup / Build list of Circuits for Manual screen
+//SLM0615 Move to CircuitList	        BuildCircuitList();
 //SLM1-12       BuildCircuitListFromFile();
-	}
-	
-
-	private void BuildCircuitList()
-	{
-		Log.d(LOGTAG, "IN BuildCircuitList()");
-		
-		maCircuits = new Circuit[MAX_NUM_CIRCUITS];
-
-		// Build circuit list with default names
-		BuildGeneralCircuitList();
-		
-		listAdapter.setList(list);
+        	
+        	sCircuitList = CircuitList.getInstance();
+        	
+        	if ( DEBUG )
+        	{
+        		Log.d(SAVEDIN, "NULL #############");
+        		// Prints ALL items in CircuitList
+        		sCircuitList.PrintCircuitList();
+        		Log.d(SAVEDIN, "NULL #############");
+        	}
+        	
+        	int j;
+        	// SLM0618 Obtain data for displayed list from Singleton CircuitList
+    		for ( int i=0; i < MAX_NUM_CIRCUITS; i++ )
+    		{
+    			j = i + 1;
+    			Circuit c = sCircuitList.get(i);
+    			
+    			
+				ListItem lItem = new ListItem ( "C"+j,
+					c.getCircNum(), c.getCircName(),  
+					( c.isMaster() ? 1: 0), i );
+			
+				
+				lItem.setDisplayDuration(c.getDuration(Circuit.CIR_MANUAL_MODE));
+				lItem.setStartTime(c.getStartTime(Circuit.CIR_MANUAL_MODE));
+				lItem.setStopTime(c.getStopTime(Circuit.CIR_MANUAL_MODE));
+				long temp = c.getStopTime(Circuit.CIR_MANUAL_MODE) - c.getStartTime(Circuit.CIR_MANUAL_MODE);
+				lItem.setLogDuration(temp);
+				Log.d(LOGTAG, lItem.toString());
+			
+				list.add ( lItem );	
+        	
+        	
+    		}
+        }
+        listAdapter.setList(list);
 		listAdapter.notifyDataSetChanged();	
 	}
 	
-
-	/**
-	 *  BuildGeneralCircuitList - Build circuit list with default names.
-	 */
-	private void BuildGeneralCircuitList()
-	{
-		int j = 0;
-		// Temporarily set up circuits
-		for ( int i=0; i < MAX_NUM_CIRCUITS; i++ )
-		{
-			
-			j= i+1;
-			maCircuits[i] = new Circuit();
-			maCircuits[i].setCircNum(j);
-			
-			// Temporary - set circuit 1 as Master Circuit 
-			if ( i == 0 )
-			{
-				Log.d(LOGTAG, "MASTER");
-				
-				maCircuits[i].setIsMaster(true);
-				maCircuits[i].setCircName("Master Circuit");
-			}
-			else
-			{
-				maCircuits[i].setCircName("Circuit"+j);
-			}
-			maCircuits[i].setCircOn(false);	
-		
-			
-			ListItem lItem = new ListItem ( "C"+j,
-					maCircuits[i].getCircNum(), maCircuits[i].getCircName(),  
-					( maCircuits[i].isMaster() ? 1: 0), i );
-			
-			Log.d(LOGTAG, lItem.toString());
-			
-			list.add ( lItem );	
-		
-		}	
-	}
-	
-	
-	/**
-	 *  BuildGeneralCircuitList - Build circuit list from  
-	 *  circuit_description file in assets directory.
-	 */
-	private void BuildCircuitListFromFile()
-	{
-		new GetDataTask().execute ();
-	}
-	
+//SLM0615 Move BuildCircuit List to CircuitList class
 
 	
 	public void SetCircuitStatus( String command )
@@ -269,7 +271,7 @@ public class ManualModeActivity extends Activity implements OspiResultsListener
         //  Called after onCreate() OR onRestart()
         //  Called after onStop() but process has not been killed.
         super.onStart();
-        
+        if (DEBUGLC) Log.d (SAVEDIN, "onStart");
         //SLMEB
         /*SLM0601  Moving to onCreate BUT NOT SURE I SHOULD
         Log.d(LOGTAG, "Creating mOspiMsg");
@@ -284,40 +286,90 @@ public class ManualModeActivity extends Activity implements OspiResultsListener
     public void onRestart() 
     {
         //  Called after onStop() but process has not been killed.
-        if (DEBUG) Log.d (LOGTAG, "onRestart");
+        if (DEBUGLC) Log.d (SAVEDIN, "onRestart");
         super.onRestart();
     }
     
     
+    /* (non-Javadoc)
+     * @see android.app.Activity#onResume()
+     */
     @Override
     protected void onResume() 
     {
         //  Called after onStart() as Activity comes to foreground.
-        if (DEBUG) Log.d (LOGTAG, "onResume");
+        if (DEBUGLC) Log.d (SAVEDIN, "onResume");
         super.onResume();
     }
     
+    
+    /* (non-Javadoc)
+     * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
+     * 
+     * The system calls this method when the user is leaving your activity and 
+     * passes it the Bundle object that will be saved in the event that your 
+     * activity is destroyed unexpectedly.
+     */
     @Override
     public void onSaveInstanceState(Bundle outState) {
         //  Called before an Activity is killed.
-    	if ( DEBUG )
-    		Log.d (LOGTAG, "onSaveInstanceState()");
+    	if ( DEBUGLC )
+    	{
+    		Log.d (SAVEDIN, "************************************************()");
+    		Log.d (SAVEDIN, "In onSaveInstanceState()");
+    		Log.d (SAVEDIN,  "outState = "+outState.toString());
+    	}
+ //SLM0606   	
+    	outState.putSerializable( "mmList", (Serializable) list );
+    	
+    	Log.d(SAVEDIN,  "list = "+ list.toString());
+    	
+    	// Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(outState);
+        Log.d (SAVEDIN, "************************************************");
+    }
+    
+    /* (non-Javadoc)
+     * @see android.app.Activity#onRestoreInstanceState(android.os.Bundle)
+     */
+    @Override
+    public void onRestoreInstanceState( Bundle outState )
+    {
+    	Log.d (SAVEDIN, "************************************************");
+    	Log.d (SAVEDIN, "In onRestoreInstanceState()");
+    	
+    	// Always call the superclass so it can save the view hierarchy state
+        super.onRestoreInstanceState(outState);
+      
+    	Log.d(SAVEDIN,  "HERE1  outState != null");
+    	list = (ArrayList<ListItem>)outState.getSerializable("mmList");
+    	
+        Log.d (SAVEDIN, "************************************************");
+    	
     }
     
     @Override
     public void onPause() 
     {
         //  Called when Activity is placed in background
-        if (DEBUG) Log.d (LOGTAG, "onPause"); 
+        if (DEBUGLC) Log.d (SAVEDIN, "onPause"); 
         super.onPause();
+        
+        Log.d (SAVEDIN, "Saving sCircuitList"); 
+        int i = 0;
+        for ( ListItem li:list )
+        {
+        	sCircuitList.get(i).storeManualModeInfo(li.getStartTime(), li.getStopTime(), li.getDisplayDuration());
+        	i++;
+        	
+        }
     }
     
     @Override
     protected void onStop() 
     {
     	//  The Activity is no longer visible
-        if (DEBUG) Log.d (LOGTAG, "onStop");
+        if (DEBUGLC) Log.d (SAVEDIN, "onStop");
         
         //SLMEB
         Log.d(LOGTAG, "unregistering mOspiMsgHandler (& this from EventBus)");
@@ -330,7 +382,7 @@ public class ManualModeActivity extends Activity implements OspiResultsListener
     public void onDestroy() 
     {
     	//  The Activity is finishing or being destroyed by the system
-        if (DEBUG) Log.d (LOGTAG, "onDestroy");
+        if (DEBUGLC) Log.d (SAVEDIN, "onDestroy");
         super.onDestroy();
     }
   
@@ -341,6 +393,7 @@ public class ManualModeActivity extends Activity implements OspiResultsListener
     * Currently reads Circuit data from file in assets directory, 
     * circuit_description 
     */
+/*    
 	private class GetDataTask extends AsyncTask<Void, Void, List<ListItem>>
 	{
 		private final String LOGTAG = GetDataTask.class.getSimpleName();
@@ -397,7 +450,7 @@ public class ManualModeActivity extends Activity implements OspiResultsListener
 		           
 		            //  3.  Delay for 2 seconds.  We want to see the progress indicator.
 		           // try { Thread.sleep(2000); }
-		           // catch (InterruptedException e) { /* ignore */ }
+		           // catch (InterruptedException e) { / ignore  }
 		          
 	            }
 	            catch (FileNotFoundException e) 
@@ -436,5 +489,7 @@ public class ManualModeActivity extends Activity implements OspiResultsListener
     	    pD.dismiss();
 		}
 	}
+	
+	*/
 	
 }

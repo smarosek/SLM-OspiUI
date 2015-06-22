@@ -12,6 +12,8 @@ package com.slm_ospiui;
  * 	
  * 	03/31/15 Created
  *	06/02/15 Changed name from CircuitOnOffEvent to CircuitOnOffMessage.
+ *	06/18/15 Added time parameter to Constructor so can handle timed 
+ *				manual operation.
  *
  */
 import android.util.Log;
@@ -47,7 +49,7 @@ public class CircuitOnOffMessage extends OspiMessage
 	public int mCircuitNum;
 	 
     //public CircuitOnOffMessage( int msgType, int circuitNum, int status )
-    public CircuitOnOffMessage( int status, int circuitNum )
+    public CircuitOnOffMessage( int status, int circuitNum, int time )
     {
         this.mStatus = status;
         this.mCircuitNum = circuitNum;
@@ -85,7 +87,8 @@ public class CircuitOnOffMessage extends OspiMessage
 	        case SET_CIRCUIT_ON_OFF_STATUS:
 	        default:
 	        	// This works   
-	        	mMessage = URL+STATION_NUMBER+mCircuitNum+"="+mStatus+"&t=0";
+	        	//SLM 0618 WAS mMessage = URL+STATION_NUMBER+mCircuitNum+"="+mStatus+"&t=0";
+	        	mMessage = URL+STATION_NUMBER+mCircuitNum+"="+mStatus+"&t="+time;
 	        	//if ( mStatus == 1 )
 	        	//	mStatus++;
 	        	//message = URL+STATION_NUMBER+mCircuitNum+"="+mStatus;
